@@ -88,7 +88,8 @@
 		//for (i=0; i<analyser.frequencyBinCount; i++ ){
 		//	var power = power + dataArray[i]^2;
 		//}
-		var power = dataArray[1]^2
+		//var power = dataArray[1]^2
+		power = 100 * dataArray[0] * dataArray[0] * dataArray[3] * dataArray[3];
 		current_level = amp_scale*Math.log(1.0 + 1.0/sensitivity*power)/Math.log(1.0 + 1.0/sensitivity);
 		if (current_level>amp_envelop){
 			amp_envelop = current_level;
