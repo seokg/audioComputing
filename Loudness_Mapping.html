@@ -89,7 +89,7 @@
 
 			norm_data = (dataArray[i]^2)^0.5 ;
 			power = 10^norm_data/20;
-			//power = (dataArray[i]^2)^0.5
+
 			current_level = current_level + amp_scale*Math.log(1.0+1.0/sensitivity*power)/Math.log(1.0+1.0/sensitivity);
 		}
 		if (current_level>amp_envelop){
@@ -121,13 +121,14 @@
 	function fileLoaded(e){
 	    context.decodeAudioData(e.target.result, function(buffer) {
 	      myAudioBuffer = buffer;
+	      playSound();
 	    });
 	}
 
 	var source = null;
-	function playSound(anybuffer) {
+	function playSound(myAudioBuffer) {
 	  source = context.createBufferSource();
-	  source.buffer = anybuffer;
+	  source.buffer = myAudioBuffer;
 	  source.connect(context.destination);
 	  
 	  // connect source to analyser
