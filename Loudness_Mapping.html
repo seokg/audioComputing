@@ -94,10 +94,10 @@
 
 		current_level = current_level + amp_scale*Math.log(1.0+1.0/sensitivity*power)/Math.log(1.0+1.0/sensitivity);
 		if (current_level>amp_envelop){
-			amp_envelope = current_level
+			amp_envelope = current_level;
 		}
 		else{
-			amp_envelope = decay_coef* amp_envelope
+			amp_envelope = decay_coef* amp_envelope;
 		}
 		console.log(amp_envelope)
 		///////////////////////////
