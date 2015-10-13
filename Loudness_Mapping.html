@@ -85,14 +85,13 @@
 		
 		///// YOUR CODE IS HERE /////
 		current_level = 0;
-		console.log(dataArray);
-		for (i=0; i<analyser.frequencyBinCount; i++ ){
+		var power1 = 10 * dataArray[0]^2;
+		var power1 = 10 * dataArray[1]^2;
+		power = power1*power2;
 
-		//	norm_data = (dataArray[i]^2)^0.5 ;
-		//	power = 10^norm_data/20;
-			power = 100*dataArray[0]^2 * dataArray[3]^2 ; 
-			current_level = current_level + amp_scale*Math.log(1.0+1.0/sensitivity*power)/Math.log(1.0+1.0/sensitivity);
-		}
+			 
+
+		current_level = current_level + amp_scale*Math.log(1.0+1.0/sensitivity*power)/Math.log(1.0+1.0/sensitivity);
 		if (current_level>amp_envelop){
 			amp_envelope = current_level
 		}
