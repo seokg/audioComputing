@@ -121,12 +121,12 @@
 	function fileLoaded(e){
 	    context.decodeAudioData(e.target.result, function(buffer) {
 	      myAudioBuffer = buffer;
-	      playSound();
 	    });
 	}
 
 	var source = null;
 	function playSound(anybuffer) {
+		playSound();
 	  source = context.createBufferSource();
 	  source.buffer = anybuffer;
 	  source.connect(context.destination);
