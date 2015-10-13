@@ -84,7 +84,6 @@
 		//        (decay_coef can be set to 0.9 or so)  
 		
 		///// YOUR CODE IS HERE /////
-		current_level = 0;
 		power =0
 		for (i=0; i<analyser.frequencyBinCount; i++ ){
 			var power = power + dataArray[i]^2;
@@ -92,14 +91,14 @@
 		
 		power = power/2;	 
 
-		current_level = current_level + amp_scale*Math.log(1.0+1.0/sensitivity*power)/Math.log(1.0+1.0/sensitivity);
+		current_level = amp_scale*Math.log(1.0 + 1.0/sensitivity*power)/Math.log(1.0 + 1.0/sensitivity);
 		if (current_level>amp_envelop){
-			amp_envelope = current_level;
+			amp_envelop = current_level;
 		}
 		else{
-			amp_envelope = decay_coef* amp_envelope;
+			amp_envelop = decay_coef* amp_envelop;
 		}
-		console.log(amp_envelope)
+		console.log(amp_envelop);
 		///////////////////////////
 
 
