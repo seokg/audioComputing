@@ -57,7 +57,7 @@
 		function midi2hertz(midi) {
 			var hertz;
 			///// YOUR CODE IS HERE /////
-			hertz = (Math.pow(2,(midi-69)/12)) * 440;	
+			hertz = (Math.pow((midi-69)/12)) * 440;	
 			/////////////////////////////
 			return hertz;
 		}
@@ -121,6 +121,10 @@
 		function fileLoaded(e){
 		    context.decodeAudioData(e.target.result, function(buffer) {
 		      myAudioBuffer = buffer;
+		      source.buffer = buffer;
+		      source = context.createBufferSource();
+		      source.connect(context.destination);
+		      source.connect(analyser);
 		    });
 		}
 
