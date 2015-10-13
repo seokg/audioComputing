@@ -121,7 +121,6 @@
 	function fileLoaded(e){
 	    context.decodeAudioData(e.target.result, function(buffer) {
 	      myAudioBuffer = buffer;
-	      playSound(buffer);
 	    });
 	}
 
