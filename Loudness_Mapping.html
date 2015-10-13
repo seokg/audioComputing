@@ -17,7 +17,15 @@
 	var context;
 	var myAudioBuffer = null;
 	var analyser;
-	
+	// variable i declared
+	var norm_data;
+	var amp_scale = 100;
+	var sensitivity = 0.1;
+	var current_level;
+	var power;
+	var decay_coef = 0.9;
+
+
 	var wave_view;
 	var WIDTH = 512;
 	var HEIGHT = 512;
@@ -76,16 +84,23 @@
 		//        (decay_coef can be set to 0.9 or so)  
 		
 		///// YOUR CODE IS HERE /////
-		
-		
-		
-		
+		current_level = 0;
+		for (i=0; i<analyser.frequencyBinCount; i++ ){
+			power = (dataArray[i]^2)^0.5 ;
+			current_level = current_level + amp_scale*Math.log(1.0+1.0/sensitivity*power)/Math.log(1.0+1.0/sensitivity);
+		}
+		if (current_level>amp_envelop){
+			amp_envelope = current_level
+		}
+		else{
+			amp_envelope = decay_coef* amp_envelope
+		}
 		///////////////////////////
 
 
 		// draw circle
 		drawContext.beginPath();
-		drawContext.arc(256, 256, amp_envelop, 0, 2*Math.PI, true);
+		drawContext.arc(256, 256, amp_envelop, 0, 2*Math.PI, true); // amp_envelop = radious
 		drawContext.stroke();
 		
 				 
