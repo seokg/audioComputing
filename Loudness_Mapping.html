@@ -89,8 +89,8 @@
 		//	var power = power + dataArray[i]^2;
 		//}
 		//var power = dataArray[1]^2
-		power = 100 * dataArray[0] ^ 2 ;
-		power2 = 100 *dataArray[0] ^ 2 *dataArray[3] ^ 2 ;
+		power = 100 * Math.pow (dataArray[0] ,2);
+		//power2 = 100 *dataArray[0] ^ 2 *dataArray[3] ^ 2 ;
 		current_level = amp_scale*Math.log(1.0 + 1.0/sensitivity*power)/Math.log(1.0 + 1.0/sensitivity);
 		if (current_level>amp_envelop){
 			amp_envelop = current_level;
