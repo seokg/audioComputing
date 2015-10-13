@@ -57,7 +57,7 @@
 		function midi2hertz(midi) {
 			var hertz;
 			///// YOUR CODE IS HERE /////
-			hertz = ((midi-69)/12)^2 * 440;	
+			hertz = (Math.pow((midi-69)/12),2) * 440;	
 			/////////////////////////////
 			return hertz;
 		}
