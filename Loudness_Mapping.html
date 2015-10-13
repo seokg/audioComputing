@@ -20,10 +20,10 @@
 	// variable i declared
 	var norm_data;
 	var amp_scale = 100;
-	var sensitivity = 0.1;
+	var sensitivity = 0.05;
 	var current_level;
 	var power;
-	var decay_coef = 0.9;
+	var decay_coef = 0.999;
 
 
 	var wave_view;
@@ -58,12 +58,12 @@
 		
 		// fill rectangular
 		drawContext.clearRect(0, 0, WIDTH, HEIGHT);
-		drawContext.fillStyle = 'rgb(200, 200, 200)';
+		drawContext.fillStyle = 'rgb(15, 71, 225)';
 		drawContext.fillRect(0, 0, WIDTH, HEIGHT);
 
 		// drawing line setting	
 		drawContext.lineWidth = 2;
-		drawContext.strokeStyle = 'rgb(0, 0, 0)';
+		drawContext.strokeStyle = 'rgb(190, 183, 238)';
 				
 		// get samples 
 		var dataArray = new Float32Array(analyser.frequencyBinCount);
