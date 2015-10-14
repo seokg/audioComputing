@@ -76,19 +76,13 @@
 
 			// MIDI scale power
 			var midi_power = new Float32Array(pitch_range_hz.length-1);
-
+			
+			console.log (AudioContext.sampleRate);
 			///// YOUR CODE IS HERE /////
-			var samplFreq = 22050.0;
-
-			for (var i=0; i<midi_power.length-1; i++)
-			{
-				var k = pitch_range_hz[i]*analyser.fftSize / samplFreq;
-				k = Math.round(k);
-				midi_power[i] = dataArray[k];
-			}			
-			
-			
-			
+			for (var i =1 ; i<midi_power.length-1; i++){
+				var idx = pitch_range_hz [i] *analyser.fftSize/ AudioContext.sampleRate;
+				midi_power[i] = dadtaArray[idx];
+			}
 			/////////////////////////////
 
 			var barWidth = (WIDTH / midi_power.length);
