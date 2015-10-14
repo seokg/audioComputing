@@ -107,43 +107,36 @@
 		}
 		
 
-		function fileChanged(e){
-			var file = e.target.files[0];
-			var fileReader = new FileReader();
-			fileReader.onload = fileLoaded;
-			fileReader.readAsArrayBuffer(file);
-		}
+	function fileChanged(e){
+		var file = e.target.files[0];
+		var fileReader = new FileReader();
+		fileReader.onload = fileLoaded;
+		fileReader.readAsArrayBuffer(file);
+	}
+	function fileLoaded(e){
+	    context.decodeAudioData(e.target.result, function(buffer) {
+	      source = context.createBufferSource();
+	      source.buffer = buffer;
+	      //connect source to analyser
+	      source.connect(context.destination);
+	      source.connect(analyser);
 
-		function fileLoaded(e){
-		    context.decodeAudioData(e.target.result, function(buffer) {
-		      myAudioBuffer = buffer;
-		      source.buffer = buffer;
-		      source = context.createBufferSource();
-		      source.connect(context.destination);
-		      source.connect(analyser);
-		    });
-		}
+	    });
+	}
 
-		var source = null;
-		function playSound(anybuffer) {
-		  source = context.createBufferSource();
-		  source.buffer = anybuffer;
-		  source.connect(context.destination);
-		  
-		  // connect source to analyser
-		  source.connect(analyser);
-		  
-		  source.start();
-		  
-		  // visualize audio
-		  draw_spec();
-		}
+	function playSound() {
 
-		function stopSound() {
-		  if (source) {
-		    source.stop();
-		  }
-		}	   	
-		</script>
+	  source.start();
+	  
+	  // visualize audio
+	  draw_spec();
+	}
+
+	function stopSound() {
+	  if (source) {
+	    source.stop();
+	  }
+	}	   	
+	</script>
 	</body>
 	</html>
