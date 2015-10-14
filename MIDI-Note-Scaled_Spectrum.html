@@ -6,13 +6,11 @@
 </head>
 <body>		
 	<h1> Mini Project #1: MIDI-Note-Scaled Spectrum </h1>
-	<hr />
 	
 	<input id="fileChooseInput" type="file"></input>
 	<button onclick="playSound()">Play</button>
 	<button onclick="stopSound()">Stop</button>	  
 
-	<hr />
 	<p><canvas id='spec_view' style="background: white;"></canvas></p>
 
 	<script>	
@@ -61,8 +59,6 @@
 		var hertz;
 		///// YOUR CODE IS HERE /////
 		hertz = (Math.pow(2,(midi-69)/12)) * 440;	
-		//midi = (midi - 69)/12;
-		//hertz = 440*Math.pow(2, midi);
 		/////////////////////////////
 		return hertz;
 	}
@@ -91,16 +87,6 @@
 			console.log(idx);
 			midi_power[i] = dataArray[idx];
 		}
-		
-		
-		//var samplFreq = 22050.0;
-
-	//	for (var i=0; i<midi_power.length-1; i++)
-	//	{
-	//		var k = pitch_range_hz[i]*analyser.fftSize / samplFreq;
-	//		k = Math.round(k);
-	//		midi_power[i] = dataArray[k];
-	//	}
 		
 		/////////////////////////////
 
