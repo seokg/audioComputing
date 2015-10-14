@@ -82,7 +82,7 @@
 			var sample_rate = 44100;
 			for (var i =1 ; i<midi_power.length-1; i++){
 				var idx = pitch_range_hz [i] *analyser.fftSize/ (0.5*sample_rate)
-				midi_power[i] = dadtaArray[idx];
+				midi_power[i] = dataArray[idx];
 			}
 			/////////////////////////////
 
