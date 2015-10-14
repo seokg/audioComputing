@@ -68,7 +68,7 @@
 		var drawContext = spec_view.getContext('2d');
 		
 		// fill rectangular
-		drawContext.fillStyle = 'rgb(200, 200, 200)';
+		drawContext.fillStyle = 'rgb(15, 71, 225)';
 		drawContext.fillRect(0, 0, WIDTH, HEIGHT);
 
 		// get magnitude response 
@@ -96,7 +96,7 @@
 		
 		for(var i = 0; i < midi_power.length; i++) {
 			barHeight = (midi_power[i] + analyser.minDecibels)*HEIGHT/190.0;
-			drawContext.fillStyle = 'rgb(50,50,50)';
+			drawContext.fillStyle = 'rgb(190,183,238)';
 			drawContext.fillRect(x, HEIGHT-barHeight, barWidth, barHeight);
 			x += barWidth + 1;
 			
