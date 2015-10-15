@@ -59,7 +59,12 @@
     analyser = context.createAnalyser();
     analyser.fftSize = 2048;
     analyser.smoothingTimeConstant = 0;   
-
+    // pitch range of interest
+    for (var pitch = PITCH_MIN; pitch <= PITCH_MAX; pitch = pitch + PITCH_STEP) 
+    {
+      pitch_range.push(pitch);
+      pitch_range_hz.push(midi2hertz(pitch))
+    }
 //////////////////////////////////////////////////////////
     // filter design
     //row_comb = analyser.fftSize;
@@ -95,12 +100,7 @@
       }
     }
 //////////////////////////////////////////////////////////
-    // pitch range of interest
-    for (var pitch = PITCH_MIN; pitch <= PITCH_MAX; pitch = pitch + PITCH_STEP) 
-    {
-      pitch_range.push(pitch);
-      pitch_range_hz.push(midi2hertz(pitch))
-    }
+
   }
   
   function midi2hertz(midi) {
