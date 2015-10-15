@@ -164,8 +164,8 @@
       for (var j=0 ; j < row_comb; j++){
         // dataArray[j]: in decible
         // change to power scale
-        audioArray_power = Math.pow(10,dataArray[j]/10);
-        audioArray_power = Math.pow(audioArray_power,2) 
+        audioArray_power = Math.pow(10,(dataArray[j]/10));
+        //audioArray_power = Math.pow(audioArray_power,2) 
         if (j == 0 ){
           pitch_gram[i] = comb_filter[i][j]*audioArray_power;
           energy[i]     = sum_filter[i][j]*audioArray_power;     
@@ -195,7 +195,7 @@
     drawContext.font = "30px Arial";
     if ( harmonicity > 0.5)  // THIS SHOULD BE REPLACED WITH THE CONDITIONS FOR HARMONICITY AND ENERGY VALUES 
     {
-      var detected_pitch_position = scale_one_index * Math.round(max_pitch_gram) ; 
+      var detected_pitch_position = scale_one_index * Math.round(pitch_range_hz) ; 
       drawContext.strokeText( Math.round(max_pitch_gram) + "Hz",100,50);
             
       drawContext.fillStyle = 'rgb(100,0,0)';
