@@ -69,7 +69,6 @@
     comb_filter = new Array(col_comb);
     sum_filter = new Array(col_comb);
     for (var i = 0; i< col_comb ; i++){
-
       comb_filter[i] = new Float32Array(row_comb);
       sum_filter[i]  = new Float32Array(row_comb);
       for (var j =0 ; j< row_comb; j++){
@@ -166,7 +165,7 @@
     pitch_gram = new Array(col_comb)
     energy     = new Array(col_comb)
     for (var i=0; i < col_comb ; i++){
-      for (var j=0 ; j < row_comb ; j++){
+      for (var j=0 ; j < analyser.frequencyBinCount ; j++){
         // dataArray[j]: in decible
         // change to power scale
         audioArray_power = Math.pow(10,dataArray[j]/10);
