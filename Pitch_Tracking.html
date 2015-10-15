@@ -66,6 +66,12 @@
     row_comb = analyser.frequencyBinCount;
     col_comb = pitch_range.length;
     
+    fft_size = analyser.fftSize;
+    binfrqs =  new Float32Array(fft_size);
+
+    for (var i =0; i<fft_size;i++){
+      binfrqs[i] =  (i/(fft_size*2))*context.sampleRate; 
+    }        
     
     comb_filter = new Array(col_comb);
     sum_filter = new Array(col_comb);
@@ -153,19 +159,6 @@
     
     /////////////////////////////////////////////////////////////////////////////////////
     // frequency values array
-    fft_size = analyser.fftSize;
-    binfrqs =  new Float32Array(fft_size);
-
-    for (var i =0; i<fft_size;i++){
-      binfrqs[i] =  (i/(fft_size*2))*context.sampleRate; 
-    }    
-    
-    
-    
-    
-    
-    
-
     //row_comb = analyser.fftSize;
     row_comb = analyser.frequencyBinCount;
     col_comb = pitch_range.length;
