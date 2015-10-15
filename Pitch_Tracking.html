@@ -41,7 +41,7 @@
   var max_pitch_gram;
   var max_pitch_index;
   var harmonicity;
-  var dataArray = new Float32Array(analyser.frequencyBinCount);
+  var dataArray;
   ////////////////////////////////////////
 
 
@@ -55,7 +55,7 @@
     
     // create audio context
     context = new AudioContext();
-    
+
     // analyzer
     analyser = context.createAnalyser();
     analyser.fftSize = 2048;
@@ -66,6 +66,7 @@
       pitch_range.push(pitch);
       pitch_range_hz.push(midi2hertz(pitch))
     }
+    dataArray = new Float32Array(analyser.frequencyBinCount);
 //////////////////////////////////////////////////////////
     // filter design
     //row_comb = analyser.fftSize;
