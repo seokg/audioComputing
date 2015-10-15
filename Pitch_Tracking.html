@@ -158,9 +158,11 @@
 
     for (var i =0; i<fft_size;i++){
       binfrqs[i] =  (i/(fft_size*2))*context.sampleRate; 
-    }
-
-
+    }    
+    
+    row_comb = analyser.fftSize;
+    col_comb = pitch_range.length;
+    
     pitch_gram = new Array(col_comb)
     energy     = new Array(col_comb)
     for (i = 0; i < col_comb ; i++){
