@@ -168,6 +168,7 @@
         audioArray_power = Math.pow(audioArray_power,2) 
         if (j == 0 ){
           pitch_gram[i] = comb_filter[i][j]*audioArray_power;
+          energy[i]     = sum_filter[i][j]*audioArray_power;     
         }else{
           pitch_gram[i] = pitch_gram[i]+comb_filter[i][j]*audioArray_power;
           energy[i]     = energy[i]+sum_filter[i][j]*audioArray_power;         
