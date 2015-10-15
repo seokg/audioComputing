@@ -160,6 +160,43 @@
       binfrqs[i] =  (i/(fft_size*2))*context.sampleRate; 
     }    
     
+    
+    
+    
+    
+    
+//////////////////////////////////////////////////////////
+    // filter design
+    //row_comb = analyser.fftSize;
+    row_comb = analyser.frequencyBinCount;
+    col_comb = pitch_range.length;
+    
+    
+    comb_filter = new Array(col_comb);
+    sum_filter = new Array(col_comb);
+    for (var i = 0; i< col_comb ; i++){
+      comb_filter[i] = new Float32Array(row_comb);
+      sum_filter[i]  = new Float32Array(row_comb);
+      for (var j =0 ; j< row_comb; j++){
+        comb_filter[i][j] = 0.5*Math.cos((2*Math.PI*binfrqs[j])/(pitch_range_hz[i]))+0.5;
+        sum_filter[i][j] = 1;
+        if (binfrqs[j] > num_harmonics*pitch_range_hz[i]){
+        comb_filter[i] = 0;
+        sum_filter[i] = 0;
+        }
+        if (binfrqs[j] < pitch_range_hz[i]/2){
+          comb_filter[i][j] = 0;
+          sum_filter[i][j] = 0; 
+        }
+      }
+    }
+//////////////////////////////////////////////////////////
+
+
+
+
+
+
     //row_comb = analyser.fftSize;
     row_comb = analyser.frequencyBinCount;
     col_comb = pitch_range.length;
