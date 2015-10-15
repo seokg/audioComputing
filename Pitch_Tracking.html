@@ -160,7 +160,8 @@
       binfrqs[i] =  (i/(fft_size*2))*context.sampleRate; 
     }    
     
-    row_comb = analyser.fftSize;
+    //row_comb = analyser.fftSize;
+    row_comb = analyser.frequencyBinCount;
     col_comb = pitch_range.length;
     
     pitch_gram = new Array(col_comb)
