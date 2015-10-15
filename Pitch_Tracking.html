@@ -62,7 +62,8 @@
 
 //////////////////////////////////////////////////////////
     // filter design
-    row_comb = analyser.fftSize;
+    //row_comb = analyser.fftSize;
+    row_comb = analyser.frequencyBinCount;
     col_comb = pitch_range.length;
     
     
@@ -165,7 +166,7 @@
     pitch_gram = new Array(col_comb)
     energy     = new Array(col_comb)
     for (var i=0; i < col_comb ; i++){
-      for (var j=0 ; j < analyser.frequencyBinCount ; j++){
+      for (var j=0 ; j < row_comb; j++){
         // dataArray[j]: in decible
         // change to power scale
         audioArray_power = Math.pow(10,dataArray[j]/10);
