@@ -153,22 +153,24 @@
     
     /////////////////////////////////////////////////////////////////////////////////////
     // frequency values array
-    binfrqs =  new Float32Array(analyser.fftSize);
-    for (var i =0; i<analyser.fftSize;i++){
-      binfrqs[i] =  context.sampleRate * i / analyser.fftSize 
+    fft_size = analyser.fftSize;
+    binfrqs =  new Float32Array(fft_size);
+
+    for (var i =0; i<fft_size;i++){
+      binfrqs[i] =  (i/(fft_size*2))*context.sampleRate; 
     }
 
 
-    pitch_gram = new Array(row_comb)
-    energy     = new Array(row_comb)
+    pitch_gram = new Array(col_comb)
+    energy     = new Array(col_comb)
     for (i = 0; i < col_comb ; i++){
       for (var j =0 ; j < row_comb ; j++){
         // dataArray[j]: in decible
         // change to power scale
         audioArray_power = Math.pow(10,dataArray[j]/10);
         audioArray_power = Math.pow(audioArray_power,2)   
-        pitch_gram[i] = pitch_gram[i] + comb_filter[i][j] * audioArray_power;
-        energy[i]     = energy[i] + sum_filter[i][j]  * audioArray_power;
+        pitch_gram[i] = pitch_gram[i]+comb_filter[i][j]*audioArray_power;
+        energy[i]     = energy[i]+sum_filter[i][j]*audioArray_power;
       }
 
       if (i == 1){
@@ -183,7 +185,7 @@
     scale_one_index = freq_scale*(WIDTH / analyser.frequencyBinCount);
 
 
-    console.log(max_pitch_gram);
+
     
     /////////////////////////////////////////////////////////////////////////////////////    
     /////////////////////////////   
