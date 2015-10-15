@@ -193,10 +193,10 @@
     /////////////////////////////   
 
     drawContext.font = "30px Arial";
-    if ( harmonicity > 0.5)  // THIS SHOULD BE REPLACED WITH THE CONDITIONS FOR HARMONICITY AND ENERGY VALUES 
+    if ( harmonicity )  // THIS SHOULD BE REPLACED WITH THE CONDITIONS FOR HARMONICITY AND ENERGY VALUES 
     {
       var detected_pitch_position = scale_one_index * Math.round(pitch_range_hz[max_pitch_index]) * row_comb/context.sampleRate ; 
-      drawContext.strokeText( Math.round(pitch_range_hz[max_pitch_index]) + "Hz",100,50);
+      drawContext.strokeText( Math.round(pitch_range_hz[max_pitch_index]) + "Hz, harmonicity:"+harmonicity,100,50);
             
       drawContext.fillStyle = 'rgb(100,0,0)';
       drawContext.fillRect(detected_pitch_position, 0, 2, HEIGHT);
