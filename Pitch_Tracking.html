@@ -76,7 +76,7 @@
     fft_size = analyser.fftSize;
     binfrqs =  new Float32Array(fft_size);
 
-    for (var i =0; i<fft_size;i++){
+    for (var i =0; i<row_comb;i++){
       binfrqs[i] =  (i/(fft_size*2))*context.sampleRate; 
     }        
     
