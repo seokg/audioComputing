@@ -171,9 +171,12 @@
         energy[i]     = energy[i] + sum_filter[i][j]  * audioArray_power;
       }
 
-      if ((i == 1) || (pitch_gram[i] > max_pitch_gram)){
+      if (i == 1){
         max_pitch_gram = pitch_gram[i];
         max_pitch_index = i;
+      }else if (pitch_gram[i] > max_pitch_gram){
+        max_pitch_gram = pitch_gram[i];
+        max_pitch_index = i;        
       }
     }
     harmonicity = max_pitch_gram /energy [max_pitch_index];
