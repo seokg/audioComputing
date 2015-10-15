@@ -33,8 +33,8 @@
   var sum_filter;
   var num_harmonics = 10;
   var binfrqs;
-  var row_comb = analyser.fftSize;
-  var col_comb = pitch_range.length;
+  var row_comb;
+  var col_comb;
   var pitch_gram;
   var energy;
   var audioArray_power;
@@ -130,6 +130,10 @@
     }
 
     // filter design
+    row_comb = analyser.fftSize;
+    col_comb = pitch_range.length;
+    
+    
     comb_filter = new Array(col_comb);
     sum_filter = new Array(col_comb);
     for (i = 0; i< col_comb ; i++){
