@@ -41,6 +41,7 @@
   var max_pitch_gram;
   var max_pitch_index;
   var harmonicity;
+  var dataArray = new Float32Array(analyser.frequencyBinCount);
   ////////////////////////////////////////
 
 
@@ -125,7 +126,6 @@
     drawContext.beginPath();
         
     // get samples 
-    var dataArray = new Float32Array(analyser.frequencyBinCount);
     analyser.getFloatFrequencyData(dataArray);
     
     var freq_scale = 10;
@@ -175,7 +175,7 @@
         }
       }
 
-      if (i == 1){
+      if (i == 0){
         max_pitch_gram = pitch_gram[i];
         max_pitch_index = i;
       }else if (pitch_gram[i] > max_pitch_gram){
