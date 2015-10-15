@@ -161,9 +161,9 @@
     energy     = new Array(row_comb)
     for (i = 0; i < col_comb ; i++){
       for (var j =0 ; j < row_comb ; j++){
-        // audioArray[j]: in decible
+        // dataArray[j]: in decible
         // change to power scale
-        audioArray_power = Math.pow(10,audioArray[j]/10);
+        audioArray_power = Math.pow(10,dataArray[j]/10);
         audioArray_power = Math.pow(audioArray_power,2)   
         pitch_gram[i] = pitch_gram[i] + comb_filter[i][j] * audioArray_power;
         energy[i]     = energy[i] + sum_filter[i][j]  * audioArray_power;
