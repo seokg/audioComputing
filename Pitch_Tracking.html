@@ -159,8 +159,8 @@
     ///// YOUR CODE IS HERE /////
     
     /////////////////////////////////////////////////////////////////////////////////////
-    pitch_gram = new Array(row_comb)
-    energy     = new Array(row_comb)
+    pitch_gram = new Float32Array(col_comb)
+    energy     = new Float32Array(col_comb)
     for (var i=0; i < col_comb ; i++){
       for (var j=0 ; j < row_comb; j++){
         // dataArray[j]: in decible
