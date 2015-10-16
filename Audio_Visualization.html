@@ -20,8 +20,8 @@
 	var source;
 	
 	var spec_view;
-	var WIDTH = 640;
-	var HEIGHT = 320;
+	var WIDTH = 512;
+	var HEIGHT = 512;
 	
 	var PITCH_MIN = 36;
 	var PITCH_MAX = 108;
@@ -198,8 +198,8 @@
 		
 		for(var i = 0; i < midi_power.length; i++) {
 			barHeight[i] = (midi_power[i] + analyser.minDecibels)*HEIGHT/190.0;
-			drawContext.fillStyle = 'rgb(190,183,238)';
-			drawContext.fillRect(x, HEIGHT-barHeight, barWidth, barHeight);
+//			drawContext.fillStyle = 'rgb(190,183,238)';
+//			drawContext.fillRect(x, HEIGHT-barHeight, barWidth, barHeight);
 			x += barWidth + 1;
 			
 			if (x > WIDTH)
