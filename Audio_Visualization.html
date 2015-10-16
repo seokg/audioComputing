@@ -1,42 +1,41 @@
-<!doctype html>
+<!DOCTYPE html>
 <html>
 <head>
 	<meta charset="utf-8">
 	<title> Audio Visualization </title>
 </head>
 <body>		
-	<h1> Mini Project #1: Audio Visualization </h1>
+	<h1> Mini Project #1: MIDI-Note-Scaled Spectrum </h1>
 	
 	<input id="fileChooseInput" type="file"></input>
-	<button onclick="playSound(myAudioBuffer)">Play</button>
+	<button onclick="playSound()">Play</button>
 	<button onclick="stopSound()">Stop</button>	  
 
-	<p><canvas id='wave_view' style="background: white;"></canvas></p>
+	<p><canvas id='spec_view' style="background: white;"></canvas></p>
 
 	<script>	
 	var context;
 	var myAudioBuffer = null;
 	var analyser;
-	////////////////////////////
-	// variable AUDIO LOUDNESS//
-	////////////////////////////
-	var norm_data;
-	var amp_scale = 100;
-	var sensitivity = 0.05;
-	var current_level;
-	var power;
-	var decay_coef = 0.99;
-	////////////////////////////
-	// variable MIDI-NOTE///////
-	////////////////////////////
 	var source;
+	
 	var spec_view;
-
+	var WIDTH = 640;
+	var HEIGHT = 320;
+	
 	var PITCH_MIN = 36;
 	var PITCH_MAX = 108;
 	var PITCH_STEP = 1;
 	var pitch_range = [];
 	var pitch_range_hz = [];
+		
+
+//////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////
+
+
 	var barHeight;
 	////////////////////////////
 	var wave_view;
@@ -122,6 +121,11 @@
 	}
 
 	window.requestAnimFrame=function(){return window.requestAnimationFrame||window.webkitRequestAnimationFrame||window.mozRequestAnimationFrame||window.oRequestAnimationFrame||window.msRequestAnimationFrame||function(a){window.setTimeout(a,1E3/60)}}();
+//////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////
+
 
 
 	window.onload=function(){
@@ -129,15 +133,18 @@
 		var control = document.getElementById("fileChooseInput");
 		control.addEventListener("change", fileChanged, false);
 		
+		// canvas 
+		spec_view = document.getElementById("spec_view");
+		spec_view.width =  WIDTH;
+		spec_view.height = HEIGHT;	
 		
 		// create audio context
 		context = new AudioContext();
 		
-		// analyser
+		// analyzer
 	    analyser = context.createAnalyser();
 	    analyser.fftSize = 4096;
-		//analyser.smoothingTimeConstant = 0;		
-
+		
 		// pitch range of interest
 		for (var pitch = PITCH_MIN; pitch <= PITCH_MAX; pitch = pitch + PITCH_STEP) 
 		{
@@ -145,6 +152,7 @@
 			pitch_range_hz.push(midi2hertz(pitch))
 		}	
 	}
+	
 
 
 	function midi2hertz(midi) {
@@ -155,60 +163,47 @@
 		return hertz;
 	}
 	
-	function draw_wave() {		
-		// 2d canvas context		
-		// fill rectangular
-		//drawContext.clearRect(0, 0, WIDTH, HEIGHT);
-		//drawContext.fillStyle = 'rgb(225, 225, 225)';
-		//drawContext.fillRect(0, 0, WIDTH, HEIGHT);
+	function draw_spec() {
+		// 2d canvas context
+		var drawContext = spec_view.getContext('2d');
 		
-		///// Time Domain  /////
-		var dataArray_TimeDomain = new Float32Array(analyser.frequencyBinCount);
-		analyser.getFloatTimeDomainData(dataArray_TimeDomain);
-
-		power = 100 * Math.pow (dataArray_TimeDomain[0] ,2);
-		current_level = amp_scale*Math.log(1.0 + 1.0/sensitivity*power)/Math.log(1.0 + 1.0/sensitivity);
-
-		if (current_level>amp_envelop){
-			amp_envelop = current_level;
-		}
-		else{
-			amp_envelop = decay_coef* amp_envelop;
-		}
-		///// Frequnecy Domain  /////
-		var dataArray_FreqDomain = new Uint8Array(analyser.frequencyBinCount);
-
-		analyser.getFloatFrequencyData(dataArray_FreqDomain)
+		// fill rectangular
+		drawContext.fillStyle = 'rgb(15, 71, 225)';
+		drawContext.fillRect(0, 0, WIDTH, HEIGHT);
+		// get magnitude response 
+		var dataArray = new Uint8Array(analyser.frequencyBinCount);
+		analyser.getByteFrequencyData(dataArray);
+		// MIDI scale power
 		var midi_power = new Uint8Array(pitch_range_hz.length);
+		///// YOUR CODE IS HERE /////
+		//fill midi_power list
 		var sample_rate = 44100.0;
-
 		for (var i =1 ; i<midi_power.length-1; i++){
 			var idx = pitch_range_hz [i] *analyser.fftSize/ (0.5*sample_rate);
 			idx = Math.round(idx);
-
-			midi_power[i] = dataArray_FreqDomain[idx];
+			console.log(idx);
+			midi_power[i] = dataArray[idx];
 		}
-
-		/////////////////////////////////////
+		
+		/////////////////////////////
 		var barWidth = (WIDTH / midi_power.length);
 		barHeight = new Uint8Array(pitch_range_hz.length);
 		var x = 0;	
 		
 		for(var i = 0; i < midi_power.length; i++) {
 			barHeight[i] = (midi_power[i] + analyser.minDecibels)*HEIGHT/190.0;
-			//drawContext.fillStyle = 'rgb(190,183,238)';
-			//drawContext.fillRect(x, HEIGHT-barHeight[i], barWidth, barHeight[i]);
+			drawContext.fillStyle = 'rgb(190,183,238)';
+			drawContext.fillRect(x, HEIGHT-barHeight, barWidth, barHeight);
 			x += barWidth + 1;
 			
 			if (x > WIDTH)
 				break;
 		}
-
+		
 		if(1){ // trailing circle: make it always true
 			drawContext.fillStyle = 'rgba(0,0,0,.1)';
 			drawContext.fillRect(0,0,WIDTH,HEIGHT);
-		} 
-
+		}
 
 		var j = 1;
 		var max_barheight=0;
@@ -225,103 +220,33 @@
 		orb.draw(drawContext);
 		orb.update();		
 		window.requestAnimationFrame(draw_wave);
-		
 
+
+		// queue for next callback
+		window.requestAnimationFrame(draw_spec);
 	}
-
-
-
-	////////////////////////////
-	// loop for dawing  ////////
-	////////////////////////////
-
-
-	var loop = function(){
-	  window.requestAnimFrame(loop);
-	  ////////////////////////////////////
-	  	draw_wave();
-	  ///////////////////////////////////
-		if(1){ // trailing circle: make it always true
-			drawContext.fillStyle = 'rgba(0,0,0,.1)';
-			drawContext.fillRect(0,0,WIDTH,HEIGHT);
-		} 
-
-		var j = 1;
-		var max_barheight=0;
-		var max_index=0;
-		while (j<barHeight.length){
-			if (barHeight[j] > max_barheight){
-				max_barheight = barHeight[j];
-				max_index = j;
-
-			}
-			j++;
-		}
-		var orb = orbs[max_index];
-		orb.draw(drawContext);
-		orb.update();		
-
-
-
-//		var i = orbs.length;
-//		while(i--){
-//			var orb = orbs[i];	
-//			var updateCount = 3;
-//			while(updateCount--){
-//				orb.draw(drawContext);
-//				orb.update();		
-//			}
-//		}
-	}
-
-
-
-
-
-
-
-//////////////////////////////////////////////////////////
-// not need to be change from this line //////////////////
-//////////////////////////////////////////////////////////
+	
 	function fileChanged(e){
 		var file = e.target.files[0];
 		var fileReader = new FileReader();
 		fileReader.onload = fileLoaded;
 		fileReader.readAsArrayBuffer(file);
 	}
-
 	function fileLoaded(e){
 	    context.decodeAudioData(e.target.result, function(buffer) {
-	      myAudioBuffer = buffer;
-	      playSound();
+	      source = context.createBufferSource();
+	      source.buffer = buffer;
+	      //connect source to analyser
+	      source.connect(context.destination);
+	      source.connect(analyser);
 	    });
 	}
-
-	var source = null;
-
-
-	// as the audio play the visualization starts to appear
-	function playSound(myAudioBuffer) {
-	 	source = context.createBufferSource();
-	 	source.buffer = myAudioBuffer;
-	 	source.connect(context.destination);
+	function playSound() {
+	  source.start();
 	  
-	  // connect source to analyser
-	 	source.connect(analyser);
-	  
-	 	source.start();
-	  
-	  // visualize audio//////////////////////////////////////////
-	  	var count = PITCH_MAX - PITCH_MIN; // need to be changed to frequency size
-		while(count--){
-			var index = 0 ;
-			createOrb(WIDTH/2, HEIGHT/2+(count*2));	// creaing orbs
-			index ++;
-		}
-		draw_wave();
-	
+	  // visualize audio
+	  draw_spec();
 	}
-
 	function stopSound() {
 	  if (source) {
 	    source.stop();
