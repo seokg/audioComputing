@@ -212,17 +212,6 @@
 	////////////////////////////
 
 
-	var count = PITCH_MAX - PITCH_MIN; // need to be changed to frequency size
-	while(count--){
-		var index = 0 ;
-		if (barHeight[index])
-		{
-			createOrb(WIDTH/2, HEIGHT/2+(count*2));	// creaing orbs
-		}
-		index ++;
-
-	}
-
 	var loop = function(){
 	  window.requestAnimFrame(loop);
 		if(1){ // trailing circle: make it always true
@@ -268,17 +257,32 @@
 
 	// as the audio play the visualization starts to appear
 	function playSound(myAudioBuffer) {
-	  source = context.createBufferSource();
-	  source.buffer = myAudioBuffer;
-	  source.connect(context.destination);
+	 	source = context.createBufferSource();
+	 	source.buffer = myAudioBuffer;
+	 	source.connect(context.destination);
 	  
 	  // connect source to analyser
-	  source.connect(analyser);
+	 	source.connect(analyser);
 	  
-	  source.start();
+	 	source.start();
 	  
 	  // visualize audio//////////////////////////////////////////
-	  loop();
+
+		draw_wave();
+		var count = PITCH_MAX - PITCH_MIN; // need to be changed to frequency size
+		while(count--){
+			var index = 0 ;
+			if (barHeight[index])
+			{
+				createOrb(WIDTH/2, HEIGHT/2+(count*2));	// creaing orbs
+			}
+			index ++;
+
+		}
+
+
+
+	 	loop();
 	}
 
 	function stopSound() {
