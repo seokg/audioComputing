@@ -219,21 +219,23 @@
 	  ////////////////////////////////////
 	  	draw_wave();
 	  ///////////////////////////////////
-	  
-	  
 		if(1){ // trailing circle: make it always true
 			drawContext.fillStyle = 'rgba(0,0,0,.1)';
 			drawContext.fillRect(0,0,WIDTH,HEIGHT);
 		} 
 		var i = orbs.length;
-		while(i--){	
-			var orb = orbs[i];	
-			var updateCount = 3;
-			while(updateCount--){
-			//	if ((i +1 ) == orbs.length)
-					orb.draw(drawContext);
-				orb.update();		
-			
+		if ( 100 < (HEIGHT -barHeight[index]))
+		var l = PITCH_MAX - PITCH_MIN;
+		while(i--){
+			while (l--)
+				if ( 100 < (HEIGHT -barHeight[l])) 
+					var orb = orbs[i];	
+					var updateCount = 3;
+					while(updateCount--){
+					//	if ((i +1 ) == orbs.length)
+						orb.draw(drawContext);
+						orb.update();		
+				
 			}
 		}
 	}
