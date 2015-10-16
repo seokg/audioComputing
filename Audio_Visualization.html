@@ -247,8 +247,8 @@
 		var orb = orbs[max_index];
 
 		var orb_loudness = orbs [orbs.length-1];
-		orb_loudness.size = amp_envelope/100;
-		console.log(amp_envelope/100);
+		orb_loudness.size = amp_envelope/Math.pow(10,4);
+		console.log(orb_loudness.size);
 
 		orb.draw(drawContext);
 		orb.update();		
