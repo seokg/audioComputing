@@ -176,9 +176,6 @@
 		// 2d canvas context
 		var drawContext = spec_view.getContext('2d');
 		
-		// fill rectangular
-		drawContext.fillStyle = 'rgb(15, 71, 225)';
-		drawContext.fillRect(0, 0, WIDTH, HEIGHT);
 		// get magnitude response 
 		var dataArray = new Uint8Array(analyser.frequencyBinCount);
 		analyser.getByteFrequencyData(dataArray);
