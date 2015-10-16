@@ -228,7 +228,14 @@
 	}
 	function playSound() {
 	  source.start();
-	  
+	  // visualize audio//////////////////////////////////////////
+		var count = PITCH_MAX - PITCH_MIN; // need to be changed to frequency size
+		while(count--){
+			var index = 0 ;
+			createOrb(WIDTH/2, HEIGHT/2+(count*2));	// creaing orbs
+			index ++;
+		}
+			
 	  // visualize audio
 	  draw_spec();
 	}
