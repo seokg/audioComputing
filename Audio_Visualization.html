@@ -194,8 +194,8 @@
 		
 		for(var i = 0; i < midi_power.length; i++) {
 			barHeight[i] = (midi_power[i] + analyser.minDecibels)*HEIGHT/190.0;
-			drawContext.fillStyle = 'rgb(190,183,238)';
-			drawContext.fillRect(x, HEIGHT-barHeight[i], barWidth, barHeight[i]);
+			//drawContext.fillStyle = 'rgb(190,183,238)';
+			//drawContext.fillRect(x, HEIGHT-barHeight[i], barWidth, barHeight[i]);
 			x += barWidth + 1;
 			
 			if (x > WIDTH)
