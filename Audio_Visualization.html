@@ -40,8 +40,9 @@
 	////////////////////////////
 	// variable for orb ////////
 	////////////////////////////
+	var drawContext = wave_view.getContext('2d');
+	drawContext.lineCap = 'round';
 	var rand = function(rMi, rMa){return ~~((Math.random()*(rMa-rMi+1))+rMi);} // Math.random: 0 ~ 1
-	ctx.lineCap = 'round';
 	var orbs = [];
 	var orbCount = 30;
 	var radius;
@@ -80,12 +81,12 @@
 			speed: (rand(5,10)/1000)*(dist/750)+.015,
 			alpha: 1 - Math.abs(dist)/WIDTH,
 			draw: function() {			
-				ctx.strokeStyle = 'hsla('+this.colorAngle+',100%,50%,1)';	
-				ctx.lineWidth = this.size;			
-				ctx.beginPath();
-				ctx.moveTo(this.lastX, this.lastY);
-				ctx.lineTo(this.x, this.y);
-				ctx.stroke();
+				drawContext.strokeStyle = 'hsla('+this.colorAngle+',100%,50%,1)';	
+				drawContext.lineWidth = this.size;			
+				drawContext.beginPath();
+				drawContext.moveTo(this.lastX, this.lastY);
+				drawContext.lineTo(this.x, this.y);
+				drawContext.stroke();
 			},	
 			update: function(){
 				var mx = this.x;
@@ -155,9 +156,7 @@
 	}
 	
 	function draw_wave(timestamp) {		
-		// 2d canvas context
-		var drawContext = wave_view.getContext('2d');
-		
+		// 2d canvas context		
 		// fill rectangular
 		drawContext.clearRect(0, 0, WIDTH, HEIGHT);
 		drawContext.fillStyle = 'rgb(225, 225, 225)';
