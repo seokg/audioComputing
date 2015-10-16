@@ -43,12 +43,13 @@
 	////////////////////////////
 	// variable for orb ////////
 	////////////////////////////
-	wave_view = document.getElementById("wave_view");
-	wave_view.width =  WIDTH;
-	wave_view.height = HEIGHT;
-	var drawContext = wave_view.getContext('2d');
-	drawContext.lineCap = 'round';
-	var rand = function(rMi, rMa){return ~~((Math.random()*(rMa-rMi+1))+rMi);} // Math.random: 0 ~ 1
+	var drawContext;
+//	wave_view = document.getElementById("wave_view");
+//	wave_view.width =  WIDTH;
+//	wave_view.height = HEIGHT;
+//	var drawContext = wave_view.getContext('2d');
+//	drawContext.lineCap = 'round';
+//	var rand = function(rMi, rMa){return ~~((Math.random()*(rMa-rMi+1))+rMi);} // Math.random: 0 ~ 1
 	var orbs = [];
 	var orbCount = 30;
 	var radius;
@@ -130,7 +131,14 @@
 		spec_view = document.getElementById("spec_view");
 		spec_view.width =  WIDTH;
 		spec_view.height = HEIGHT;	
+		var drawContext = spec_view.getContext('2d');
 		
+		spec_view = document.getElementById("spec_view");
+		spec_view.width =  WIDTH;
+		spec_view.height = HEIGHT;
+		var drawContext = spec_view.getContext('2d');
+		drawContext.lineCap = 'round';
+		var rand = function(rMi, rMa){return ~~((Math.random()*(rMa-rMi+1))+rMi);} // Math.random: 0 ~ 1
 
 		// analyzer
 	    analyser = context.createAnalyser();
@@ -154,7 +162,7 @@
 	
 	function draw_spec() {
 		// 2d canvas context
-		//var drawContext = spec_view.getContext('2d');
+		var drawContext = spec_view.getContext('2d');
 		
 		// fill rectangular
 		//drawContext.fillStyle = 'rgb(15, 71, 225)';
