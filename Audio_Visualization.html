@@ -44,6 +44,7 @@
 	// variable for orb ////////
 	////////////////////////////
 	var drawContext;
+	var rand;
 //	wave_view = document.getElementById("wave_view");
 //	wave_view.width =  WIDTH;
 //	wave_view.height = HEIGHT;
@@ -136,9 +137,9 @@
 		spec_view = document.getElementById("spec_view");
 		spec_view.width =  WIDTH;
 		spec_view.height = HEIGHT;
-		var drawContext = spec_view.getContext('2d');
+		drawContext = spec_view.getContext('2d');
 		drawContext.lineCap = 'round';
-		var rand = function(rMi, rMa){return ~~((Math.random()*(rMa-rMi+1))+rMi);} // Math.random: 0 ~ 1
+		rand = function(rMi, rMa){return ~~((Math.random()*(rMa-rMi+1))+rMi);} // Math.random: 0 ~ 1
 
 		// analyzer
 	    analyser = context.createAnalyser();
