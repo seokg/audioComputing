@@ -224,28 +224,14 @@
 			drawContext.fillRect(0,0,WIDTH,HEIGHT);
 		} 
 		var i = orbs.length;
-	//while (l--)
-	//			if ( 100 < (HEIGHT -barHeight[l])) 
-		var updating = 2;
-		while (updating--){
-			var l = 0;
-			while (l < (PITCH_MAX - PITCH_MIN)){
-				if ( 60 < (HEIGHT -barHeight[l])){
-					orbs[i].draw(drawContext);
-					orbs[i].update;
-				}
-				l ++; 
+		while(i--){
+			var orb = orbs[i];	
+			var updateCount = 3;
+			while(updateCount--){
+				orb.draw(drawContext);
+				orb.update();		
 			}
 		}
-
-//		while(i--){
-//			var orb = orbs[i];	
-//			var updateCount = 3;
-//			while(updateCount--){
-//				orb.draw(drawContext);
-//				orb.update();		
-//			}
-//		}
 	}
 
 
