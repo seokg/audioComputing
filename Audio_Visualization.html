@@ -185,7 +185,6 @@
 		for (var i =1 ; i<midi_power.length-1; i++){
 			var idx = pitch_range_hz [i] *analyser.fftSize/ (0.5*sample_rate);
 			idx = Math.round(idx);
-			console.log(idx);
 			midi_power[i] = dataArray_FreqDomain[idx];
 		}
 
@@ -228,7 +227,8 @@
 		var l = PITCH_MAX - PITCH_MIN;
 		while(i--){
 			while (l--)
-				if ( 100 < (HEIGHT -barHeight[l])) 
+				console.log(HEIGHT -barHeight[l]);
+				if ( 50 < (HEIGHT -barHeight[l])) 
 					var orb = orbs[i];	
 					var updateCount = 3;
 					while(updateCount--){
@@ -281,7 +281,6 @@
 	  	var count = PITCH_MAX - PITCH_MIN; // need to be changed to frequency size
 		while(count--){
 			var index = 0 ;
-			//console.log((HEIGHT -barHeight[index]));
 			//if ( 100 < (HEIGHT -barHeight[index]))
 			createOrb(WIDTH/2, HEIGHT/2+(count*2));	// creaing orbs
 			index ++;
