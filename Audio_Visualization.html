@@ -37,6 +37,7 @@
 	var PITCH_STEP = 1;
 	var pitch_range = [];
 	var pitch_range_hz = [];
+	var barHeight;
 	////////////////////////////
 	var wave_view;
 	var WIDTH = 512;
@@ -186,8 +187,22 @@
 			midi_power[i] = dataArray_FreqDomain[idx];
 		}
 
-		var sample_rate = 44100.0;
+		/////////////////////////////////////
+		var barWidth = (WIDTH / midi_power.length);
+		barHeight [i] = new Uint8Array(pitch_range_hz.length);
+		var x = 0;	
 		
+		for(var i = 0; i < midi_power.length; i++) {
+			barHeight[i] = (midi_power[i] + analyser.minDecibels)*HEIGHT/190.0;
+			drawContext.fillStyle = 'rgb(190,183,238)';
+			drawContext.fillRect(x, HEIGHT-barHeight[i], barWidth, barHeight[i]);
+			x += barWidth + 1;
+			
+			if (x > WIDTH)
+				break;
+		}
+		
+
 	}
 
 
@@ -199,7 +214,13 @@
 
 	var count = PITCH_MAX - PITCH_MIN; // need to be changed to frequency size
 	while(count--){
-			createOrb(WIDTH/2, HEIGHT/2+(count*2)); // creaing orbs
+		var index = 0 ;
+		if (barHeight[index])
+		{
+			createOrb(WIDTH/2, HEIGHT/2+(count*2));	// creaing orbs
+		}
+		index ++;
+
 	}
 
 	var loop = function(){
