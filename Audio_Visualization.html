@@ -133,7 +133,7 @@
 		// create audio context
 		context = new AudioContext();
 		
-		// analyzer
+		// analyser
 	    analyser = context.createAnalyser();
 	    analyser.fftSize = 256;
 		analyser.smoothingTimeConstant = 0;		
@@ -175,7 +175,7 @@
 			amp_envelop = decay_coef* amp_envelop;
 		}
 		///// Frequnecy Domain  /////
-		var dataArray_FreqDomain = new Unit8Array(analyzer.frequencyBinCount);
+		var dataArray_FreqDomain = new Unit8Array(analyser.frequencyBinCount);
 		analyser.getFloatFrequencyData(dataArray_FreqDomain)
 		var midi_power = new Uint8Array(pitch_range_hz.length);
 		var sample_rate = 44100.0;
