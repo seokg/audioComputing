@@ -216,6 +216,19 @@
 
 	var loop = function(){
 	  window.requestAnimFrame(loop);
+	  ////////////////////////////////////
+	  	draw_wave();
+		var count = PITCH_MAX - PITCH_MIN; // need to be changed to frequency size
+		while(count--){
+			var index = 0 ;
+			console.log((HEIGHT -barHeight[index]));
+			if ( 50 < (HEIGHT -barHeight[index])){
+				createOrb(WIDTH/2, HEIGHT/2+(count*2));}	// creaing orbs
+			index ++;
+		}
+	  ///////////////////////////////////
+	  
+	  
 		if(1){ // trailing circle: make it always true
 			drawContext.fillStyle = 'rgba(0,0,0,.1)';
 			drawContext.fillRect(0,0,WIDTH,HEIGHT);
@@ -269,22 +282,6 @@
 	 	source.start();
 	  
 	  // visualize audio//////////////////////////////////////////
-
-		draw_wave();
-		var count = PITCH_MAX - PITCH_MIN; // need to be changed to frequency size
-		while(count--){
-			var index = 0 ;
-			console.log((HEIGHT -barHeight[index]));
-			if ( 50 < (HEIGHT -barHeight[index]))
-			{
-				createOrb(WIDTH/2, HEIGHT/2+(count*2));	// creaing orbs
-			}
-			index ++;
-
-		}
-
-
-
 	 	loop();
 	}
 
