@@ -20,8 +20,8 @@
 	var source;
 	
 	var spec_view;
-	var WIDTH = 512;
-	var HEIGHT = 512;
+//	var WIDTH = 640;
+//	var HEIGHT = 320;
 	
 	var PITCH_MIN = 36;
 	var PITCH_MAX = 108;
@@ -29,20 +29,10 @@
 	var pitch_range = [];
 	var pitch_range_hz = [];
 
-	////////////////////////////
-	var wave_view;
-	var WIDTH = 512;
-	var HEIGHT = 512;
-	
-	var amp_envelop = 0;
-		
-
 //////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////
-
-
 	var barHeight;
 	////////////////////////////
 	var wave_view;
@@ -53,7 +43,6 @@
 	////////////////////////////
 	// variable for orb ////////
 	////////////////////////////
-
 //	wave_view = document.getElementById("wave_view");
 //	wave_view.width =  WIDTH;
 //	wave_view.height = HEIGHT;
@@ -63,8 +52,6 @@
 	var orbs = [];
 	var orbCount = 30;
 	var radius;
-
-
 	window.requestAnimFrame=function(){return window.requestAnimationFrame||window.webkitRequestAnimationFrame||window.mozRequestAnimationFrame||window.oRequestAnimationFrame||window.msRequestAnimationFrame||function(a){window.setTimeout(a,1E3/60)}}();
 	///////////////////////////
 	// orb function ///////////
@@ -127,17 +114,14 @@
 			}
 		});
 	}
-
 //////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////
-
-
-
 	window.onload=function(){
 		// create audio context
 		context = new AudioContext();
+				
 		// file open button
 		var control = document.getElementById("fileChooseInput");
 		control.addEventListener("change", fileChanged, false);
@@ -147,9 +131,7 @@
 		spec_view.width =  WIDTH;
 		spec_view.height = HEIGHT;	
 		
-		// create audio context
-		context = new AudioContext();
-		
+
 		// analyzer
 	    analyser = context.createAnalyser();
 	    analyser.fftSize = 4096;
@@ -162,8 +144,6 @@
 		}	
 	}
 	
-
-
 	function midi2hertz(midi) {
 		var hertz;
 		///// YOUR CODE IS HERE /////
@@ -176,6 +156,9 @@
 		// 2d canvas context
 		var drawContext = spec_view.getContext('2d');
 		
+		// fill rectangular
+		//drawContext.fillStyle = 'rgb(15, 71, 225)';
+		//drawContext.fillRect(0, 0, WIDTH, HEIGHT);
 		// get magnitude response 
 		var dataArray = new Uint8Array(analyser.frequencyBinCount);
 		analyser.getByteFrequencyData(dataArray);
@@ -198,8 +181,8 @@
 		
 		for(var i = 0; i < midi_power.length; i++) {
 			barHeight[i] = (midi_power[i] + analyser.minDecibels)*HEIGHT/190.0;
-//			drawContext.fillStyle = 'rgb(190,183,238)';
-//			drawContext.fillRect(x, HEIGHT-barHeight, barWidth, barHeight);
+			//drawContext.fillStyle = 'rgb(190,183,238)';
+			//drawContext.fillRect(x, HEIGHT-barHeight, barWidth, barHeight);
 			x += barWidth + 1;
 			
 			if (x > WIDTH)
@@ -210,7 +193,6 @@
 			drawContext.fillStyle = 'rgba(0,0,0,.1)';
 			drawContext.fillRect(0,0,WIDTH,HEIGHT);
 		}
-
 		var j = 1;
 		var max_barheight=0;
 		var max_index=0;
@@ -218,7 +200,6 @@
 			if (barHeight[j] > max_barheight){
 				max_barheight = barHeight[j];
 				max_index = j;
-
 			}
 			j++;
 		}
@@ -226,8 +207,6 @@
 		orb.draw(drawContext);
 		orb.update();		
 		window.requestAnimationFrame(draw_wave);
-
-
 		// queue for next callback
 		window.requestAnimationFrame(draw_spec);
 	}
