@@ -84,7 +84,6 @@
 		for (var i =1 ; i<midi_power.length-1; i++){
 			var idx = pitch_range_hz [i] *analyser.fftSize/ (0.5*sample_rate);
 			idx = Math.round(idx);
-			console.log(idx);
 			midi_power[i] = dataArray[idx];
 		}
 		
@@ -103,6 +102,7 @@
 			if (x > WIDTH)
 				break;
 		}
+		console.log (barHeight); 
 		
 		// queue for next callback
 		window.requestAnimationFrame(draw_spec);
