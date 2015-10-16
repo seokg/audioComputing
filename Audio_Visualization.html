@@ -203,6 +203,28 @@
 			if (x > WIDTH)
 				break;
 		}
+
+		if(1){ // trailing circle: make it always true
+			drawContext.fillStyle = 'rgba(0,0,0,.1)';
+			drawContext.fillRect(0,0,WIDTH,HEIGHT);
+		} 
+
+
+		var j = 1;
+		var max_barheight=0;
+		var max_index=0;
+		while (j<barHeight.length){
+			if (barHeight[j] > max_barheight){
+				max_barheight = barHeight[j];
+				max_index = j;
+
+			}
+			j++;
+		}
+		var orb = orbs[max_index];
+		orb.draw(drawContext);
+		orb.update();		
+		window.requestAnimationFrame(draw_wave);
 		
 
 	}
@@ -296,7 +318,8 @@
 			createOrb(WIDTH/2, HEIGHT/2+(count*2));	// creaing orbs
 			index ++;
 		}
-	 	loop();
+		draw_wave();
+	
 	}
 
 	function stopSound() {
