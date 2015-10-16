@@ -135,7 +135,7 @@
 		
 		// analyser
 	    analyser = context.createAnalyser();
-	    analyser.fftSize = 256;
+	    analyser.fftSize = 4096;
 		analyser.smoothingTimeConstant = 0;		
 
 		for (var pitch = PITCH_MIN; pitch <= PITCH_MAX; pitch = pitch + PITCH_STEP) 
@@ -162,18 +162,18 @@
 		//drawContext.fillRect(0, 0, WIDTH, HEIGHT);
 		
 		///// Time Domain  /////
-		var dataArray_TimeDomain = new Float32Array(analyser.frequencyBinCount);
-		analyser.getFloatTimeDomainData(dataArray_TimeDomain);
+//		var dataArray_TimeDomain = new Float32Array(analyser.frequencyBinCount);
+//		analyser.getFloatTimeDomainData(dataArray_TimeDomain);
+//
+//		power = 100 * Math.pow (dataArray_TimeDomain[0] ,2);
+//		current_level = amp_scale*Math.log(1.0 + 1.0/sensitivity*power)/Math.log(1.0 + 1.0/sensitivity);
 
-		power = 100 * Math.pow (dataArray_TimeDomain[0] ,2);
-		current_level = amp_scale*Math.log(1.0 + 1.0/sensitivity*power)/Math.log(1.0 + 1.0/sensitivity);
-
-		if (current_level>amp_envelop){
-			amp_envelop = current_level;
-		}
-		else{
-			amp_envelop = decay_coef* amp_envelop;
-		}
+//		if (current_level>amp_envelop){
+//			amp_envelop = current_level;
+//		}
+//		else{
+//			amp_envelop = decay_coef* amp_envelop;
+//		}
 		///// Frequnecy Domain  /////
 		var dataArray_FreqDomain = new Unit8Array(analyser.frequencyBinCount);
 		analyser.getFloatFrequencyData(dataArray_FreqDomain)
