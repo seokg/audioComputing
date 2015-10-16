@@ -82,7 +82,7 @@
 			centerY: HEIGHT/2,		
 			radius: dist,
 			//speed: 100*(rand(5,10)/1000)*(dist/750)+.015,
-			speed: 10*(10/1000)*(dist/750)+.015,
+			speed: 100*(10/1000)*(dist/750)+.015,
 			alpha: 1 - Math.abs(dist)/WIDTH,
 			draw: function() {			
 				drawContext.strokeStyle = 'hsla('+this.colorAngle+',100%,50%,1)';	
@@ -247,6 +247,7 @@
 		var orb = orbs[max_index];
 
 		var orb_loudness = orbs [orbs.length-1];
+		orb_loudness.speed = 10*(10/1000)*(dist/750)+.015;
 		orb_loudness.size = (amp_envelope/Math.pow(10,4) - 30 );
 		orb_loudness.size = Math.pow(orb_loudness.size,2);
 		console.log(orb_loudness.size);
