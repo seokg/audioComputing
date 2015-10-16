@@ -18,52 +18,50 @@
 	var myAudioBuffer = null;
 	var analyser;
 	var source;
-	
 	var spec_view;
-//	var WIDTH = 640;
-//	var HEIGHT = 320;
-	
+
 	var PITCH_MIN = 36;
 	var PITCH_MAX = 108;
 	var PITCH_STEP = 1;
 	var pitch_range = [];
 	var pitch_range_hz = [];
 
-//////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////
+	//////////////////////////////////////////////////////////////////
+	//////////////////////////////////////////////////////////////////
+
+	var amp_envelope =0;
+	var norm_data;
+	var amp_scale = 100;
+	var sensitivity = 0.1;
+	var current_level;
+	var power;
+	var decay_coef = 0.9;
+
+
+
+	//////////////////////////////////////////////////////////////////
+	//////////////////////////////////////////////////////////////////
 	var barHeight;
-	////////////////////////////
 	var wave_view;
 	var WIDTH = 512;
 	var HEIGHT = 512;
 	
-	var amp_envelop = 0;
-	////////////////////////////
+
+
 	// variable for orb ////////
-	////////////////////////////
 	var drawContext;
 	var rand;
-//	wave_view = document.getElementById("wave_view");
-//	wave_view.width =  WIDTH;
-//	wave_view.height = HEIGHT;
-//	var drawContext = wave_view.getContext('2d');
-//	drawContext.lineCap = 'round';
-//	var rand = function(rMi, rMa){return ~~((Math.random()*(rMa-rMi+1))+rMi);} // Math.random: 0 ~ 1
 	var orbs = [];
 	var orbCount = 30;
 	var radius;
-	
-	
-	
-	
+	////////////////////////////	
 	window.requestAnimFrame=function(){return window.requestAnimationFrame||window.webkitRequestAnimationFrame||window.mozRequestAnimationFrame||window.oRequestAnimationFrame||window.msRequestAnimationFrame||function(a){window.setTimeout(a,1E3/60)}}();
 
-	///////////////////////////
-	// orb function ///////////
-	///////////////////////////
-	
+	/////////////////////////////////////////
+	// orb function                       ///
+	//function from codepen.io            ///
+	//http://codepen.io/jackrugile/pen/DGenc/
+	/////////////////////////////////////////
 	function createOrb(mx,my){
 	  var dx = (WIDTH/2) - mx;
 		var dy = (HEIGHT/2) - my;
@@ -78,11 +76,13 @@
 			colorAngle: 0,
 			angle: angle + Math.PI/2,
 			//size: .5+dist/250,
-			size: rand(1,3)/2,
+			//size: rand(1,3)/2,
+			size: amp_envelope/10,
 			centerX: WIDTH/2,
 			centerY: HEIGHT/2,		
 			radius: dist,
-			speed: 100*(rand(5,10)/1000)*(dist/750)+.015,
+			//speed: 100*(rand(5,10)/1000)*(dist/750)+.015,
+			speed: 100*(10/1000)*(dist/750)+.015,
 			alpha: 1 - Math.abs(dist)/WIDTH,
 			draw: function() {			
 				drawContext.strokeStyle = 'hsla('+this.colorAngle+',100%,50%,1)';	
@@ -122,10 +122,10 @@
 			}
 		});
 	}
-//////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////
+	/////////////////////////////////////////
+	/////////////////////////////////////////
+	/////////////////////////////////////////
+	/////////////////////////////////////////
 	window.onload=function(){
 		// create audio context
 		context = new AudioContext();
@@ -168,18 +168,17 @@
 	}
 	
 	function draw_spec() {
+		
+
 		// 2d canvas context
 		drawContext = spec_view.getContext('2d');
-		
-		// fill rectangular
-		//drawContext.fillStyle = 'rgb(15, 71, 225)';
-		//drawContext.fillRect(0, 0, WIDTH, HEIGHT);
-		// get magnitude response 
+		///////////////////////////////////////////////////
+		//              data for frequency domain        //
+		///////////////////////////////////////////////////
 		var dataArray = new Uint8Array(analyser.frequencyBinCount);
 		analyser.getByteFrequencyData(dataArray);
 		// MIDI scale power
 		var midi_power = new Uint8Array(pitch_range_hz.length);
-		///// YOUR CODE IS HERE /////
 		//fill midi_power list
 		var sample_rate = 44100.0;
 		for (var i =1 ; i<midi_power.length-1; i++){
@@ -195,13 +194,41 @@
 		
 		for(var i = 0; i < midi_power.length; i++) {
 			barHeight[i] = (midi_power[i] + analyser.minDecibels)*HEIGHT/190.0;
-			//drawContext.fillStyle = 'rgb(190,183,238)';
-			//drawContext.fillRect(x, HEIGHT-barHeight, barWidth, barHeight);
 			x += barWidth + 1;
 			
 			if (x > WIDTH)
 				break;
 		}
+		//////////////////////////////
+
+
+
+
+
+		///////////////////////////////////////////////////
+		//              data for time domain             //
+		///////////////////////////////////////////////////
+		var dataArray_time = new Float32Array(analyser.frequencyBinCount);
+		analyser.getFloatTimeDomainData(dataArray_time);
+
+		current_level = 0;
+		for (i=0; i<analyser.frequencyBinCount; i++ ){
+
+			norm_data = (dataArray[i]^2)^0.5 ;
+			power = 10^norm_data/20;
+
+			current_level = current_level + amp_scale*Math.log(1.0+1.0/sensitivity*power)/Math.log(1.0+1.0/sensitivity);
+		}
+		if (current_level>amp_envelope){
+			amp_envelope = current_level;
+		}
+		else{
+			amp_envelope = decay_coef* amp_envelope;
+		}
+
+
+
+
 		
 		if(1){ // trailing circle: make it always true
 			drawContext.fillStyle = 'rgba(0,0,0,.1)';
