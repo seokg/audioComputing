@@ -46,6 +46,10 @@
 	////////////////////////////
 	// variable for orb ////////
 	////////////////////////////
+
+	wave_view = document.getElementById("wave_view");
+	wave_view.width =  WIDTH;
+	wave_view.height = HEIGHT;
 	var drawContext = wave_view.getContext('2d');
 	drawContext.lineCap = 'round';
 	var rand = function(rMi, rMa){return ~~((Math.random()*(rMa-rMi+1))+rMi);} // Math.random: 0 ~ 1
@@ -123,10 +127,6 @@
 		var control = document.getElementById("fileChooseInput");
 		control.addEventListener("change", fileChanged, false);
 		
-		// canvas 
-		wave_view = document.getElementById("wave_view");
-		wave_view.width =  WIDTH;
-		wave_view.height = HEIGHT;
 		
 		// create audio context
 		context = new AudioContext();
