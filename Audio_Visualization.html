@@ -163,18 +163,18 @@
 		//drawContext.fillRect(0, 0, WIDTH, HEIGHT);
 		
 		///// Time Domain  /////
-//		var dataArray_TimeDomain = new Float32Array(analyser.frequencyBinCount);
-//		analyser.getFloatTimeDomainData(dataArray_TimeDomain);
-//
-//		power = 100 * Math.pow (dataArray_TimeDomain[0] ,2);
-//		current_level = amp_scale*Math.log(1.0 + 1.0/sensitivity*power)/Math.log(1.0 + 1.0/sensitivity);
+		var dataArray_TimeDomain = new Float32Array(analyser.frequencyBinCount);
+		analyser.getFloatTimeDomainData(dataArray_TimeDomain);
 
-//		if (current_level>amp_envelop){
-//			amp_envelop = current_level;
-//		}
-//		else{
-//			amp_envelop = decay_coef* amp_envelop;
-//		}
+		power = 100 * Math.pow (dataArray_TimeDomain[0] ,2);
+		current_level = amp_scale*Math.log(1.0 + 1.0/sensitivity*power)/Math.log(1.0 + 1.0/sensitivity);
+
+		if (current_level>amp_envelop){
+			amp_envelop = current_level;
+		}
+		else{
+			amp_envelop = decay_coef* amp_envelop;
+		}
 		///// Frequnecy Domain  /////
 		var dataArray_FreqDomain = new Uint8Array(analyser.frequencyBinCount);
 
@@ -275,8 +275,6 @@
 	  	var count = PITCH_MAX - PITCH_MIN; // need to be changed to frequency size
 		while(count--){
 			var index = 0 ;
-			//console.log((HEIGHT -barHeight[index]));
-			//if ( 100 < (HEIGHT -barHeight[index]))
 			createOrb(WIDTH/2, HEIGHT/2+(count*2));	// creaing orbs
 			index ++;
 		}
