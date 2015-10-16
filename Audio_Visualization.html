@@ -223,15 +223,33 @@
 			drawContext.fillStyle = 'rgba(0,0,0,.1)';
 			drawContext.fillRect(0,0,WIDTH,HEIGHT);
 		} 
-		var i = orbs.length;
-		while(i--){
-			var orb = orbs[i];	
-			var updateCount = 3;
-			while(updateCount--){
-				orb.draw(drawContext);
-				orb.update();		
+
+		var j = 1;
+		var max_barheight;
+		var max_index;
+		while (j<barHeight.length){
+			if (barHeight[j] > max_barheight){
+				max_barheight = barHeight[j];
+				max_index = j;
+
 			}
+			j++;
 		}
+		var orb = orbs[max_index];
+		orb.draw(drawContext);
+		orb.update();		
+
+
+
+//		var i = orbs.length;
+//		while(i--){
+//			var orb = orbs[i];	
+//			var updateCount = 3;
+//			while(updateCount--){
+//				orb.draw(drawContext);
+//				orb.update();		
+//			}
+//		}
 	}
 
 
@@ -278,6 +296,13 @@
 			createOrb(WIDTH/2, HEIGHT/2+(count*2));	// creaing orbs
 			index ++;
 		}
+		var i = 1;
+		while (i<barHeight.length){
+			if (barHeight[i] > max_barheight)
+				max_barheight = barHeight[i];
+			i++;
+		}
+
 	 	loop();
 	}
 
