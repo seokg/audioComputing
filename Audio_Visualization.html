@@ -35,7 +35,7 @@
 	var sensitivity = 0.1;
 	var current_level;
 	var power;
-	var decay_coef = 0.9;
+	var decay_coef = 0.75;
 
 
 
@@ -237,17 +237,27 @@
 		var j = 1;
 		var max_barheight=0;
 		var max_index=0;
-		while (j<barHeight.length){
+		while (j<barHeight.length){ // extracting the maximum power in freq domain
 			if (barHeight[j] > max_barheight){
 				max_barheight = barHeight[j];
 				max_index = j;
 			}
 			j++;
 		}
+		
+		
+		
+		// drawing the orb
 		var orb = orbs[max_index];
-
 		var orb_loudness = orbs [orbs.length-1];
+		// finding the distance for speed calc
+		var mx = orb_loudness.x;
+		var my = orb_loudness.y;
+		var dx = (WIDTH/2) - mx;
+		var dy = (HEIGHT/2) - my;
+		var dist = Math.sqrt(dx * dx + dy * dy)
 		orb_loudness.speed = 10*(10/1000)*(dist/750)+.015;
+		// resizing the orb occording to the loudness
 		orb_loudness.size = (amp_envelope/Math.pow(10,4) - 30 );
 		orb_loudness.size = Math.pow(orb_loudness.size,2);
 		console.log(orb_loudness.size);
