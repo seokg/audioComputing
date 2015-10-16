@@ -274,7 +274,7 @@
 		var count = PITCH_MAX - PITCH_MIN; // need to be changed to frequency size
 		while(count--){
 			var index = 0 ;
-			if (barHeight[index])
+			if ( 50 < (HEIGHT -barHeight[index]))
 			{
 				createOrb(WIDTH/2, HEIGHT/2+(count*2));	// creaing orbs
 			}
