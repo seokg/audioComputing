@@ -82,7 +82,7 @@
 			centerY: HEIGHT/2,		
 			radius: dist,
 			//speed: 100*(rand(5,10)/1000)*(dist/750)+.015,
-			speed: 100*(10/1000)*(dist/750)+.015,
+			speed: 10*(10/1000)*(dist/750)+.015,
 			alpha: 1 - Math.abs(dist)/WIDTH,
 			draw: function() {			
 				drawContext.strokeStyle = 'hsla('+this.colorAngle+',100%,50%,1)';	
@@ -285,7 +285,7 @@
 			createOrb(WIDTH/2, HEIGHT/2+(count*2));	// creaing orbs
 			index ++;
 		}
-		createOrb(0,0);
+		createOrb(128,128);
 
 
 			
