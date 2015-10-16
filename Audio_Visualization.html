@@ -218,14 +218,6 @@
 	  window.requestAnimFrame(loop);
 	  ////////////////////////////////////
 	  	draw_wave();
-		var count = PITCH_MAX - PITCH_MIN; // need to be changed to frequency size
-		while(count--){
-			var index = 0 ;
-			console.log((HEIGHT -barHeight[index]));
-			if ( 50 < (HEIGHT -barHeight[index])){
-				createOrb(WIDTH/2, HEIGHT/2+(count*2));}	// creaing orbs
-			index ++;
-		}
 	  ///////////////////////////////////
 	  
 	  
@@ -238,8 +230,10 @@
 			var orb = orbs[i];	
 			var updateCount = 3;
 			while(updateCount--){
-			orb.update();		
-			orb.draw(drawContext)
+			//	if ((i +1 ) == orbs.length)
+					orb.draw(drawContext);
+				orb.update();		
+			
 			}
 		}
 	}
@@ -282,6 +276,14 @@
 	 	source.start();
 	  
 	  // visualize audio//////////////////////////////////////////
+	  	var count = PITCH_MAX - PITCH_MIN; // need to be changed to frequency size
+		while(count--){
+			var index = 0 ;
+			//console.log((HEIGHT -barHeight[index]));
+			//if ( 100 < (HEIGHT -barHeight[index]))
+			createOrb(WIDTH/2, HEIGHT/2+(count*2));	// creaing orbs
+			index ++;
+		}
 	 	loop();
 	}
 
