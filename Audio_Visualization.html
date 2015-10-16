@@ -185,6 +185,7 @@
 		for (var i =1 ; i<midi_power.length-1; i++){
 			var idx = pitch_range_hz [i] *analyser.fftSize/ (0.5*sample_rate);
 			idx = Math.round(idx);
+			console.log(idx);
 			midi_power[i] = dataArray_FreqDomain[idx];
 		}
 
@@ -223,21 +224,28 @@
 			drawContext.fillRect(0,0,WIDTH,HEIGHT);
 		} 
 		var i = orbs.length;
-		//if ( 100 < (HEIGHT -barHeight[index]))
-		var l = PITCH_MAX - PITCH_MIN;
-		while(i--){
-			while (l--)
-				console.log(HEIGHT -barHeight[l]);
-				if ( 50 < (HEIGHT -barHeight[l])) 
-					var orb = orbs[i];	
-					var updateCount = 3;
-					while(updateCount--){
-					//	if ((i +1 ) == orbs.length)
-						orb.draw(drawContext);
-						orb.update();		
-				
+	//while (l--)
+	//			if ( 100 < (HEIGHT -barHeight[l])) 
+		var undating = 3;
+		while (updating){
+			var l = 0;
+			while (l < (PITCH_MAX - PITCH_MIN){
+				if ( 60 < (HEIGHT -barHeight[l])){
+					orbs[i].draw(drawContext);
+					obrs[i].update	
+				}
+				l ++; 
 			}
 		}
+
+//		while(i--){
+//			var orb = orbs[i];	
+//			var updateCount = 3;
+//			while(updateCount--){
+//				orb.draw(drawContext);
+//				orb.update();		
+//			}
+//		}
 	}
 
 
@@ -281,6 +289,7 @@
 	  	var count = PITCH_MAX - PITCH_MIN; // need to be changed to frequency size
 		while(count--){
 			var index = 0 ;
+			//console.log((HEIGHT -barHeight[index]));
 			//if ( 100 < (HEIGHT -barHeight[index]))
 			createOrb(WIDTH/2, HEIGHT/2+(count*2));	// creaing orbs
 			index ++;
