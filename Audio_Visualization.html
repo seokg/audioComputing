@@ -38,6 +38,12 @@
 	var pitch_range = [];
 	var pitch_range_hz = [];
 	////////////////////////////
+	var wave_view;
+	var WIDTH = 512;
+	var HEIGHT = 512;
+	
+	var amp_envelop = 0;
+	////////////////////////////
 	// variable for orb ////////
 	////////////////////////////
 	var drawContext = wave_view.getContext('2d');
@@ -46,15 +52,6 @@
 	var orbs = [];
 	var orbCount = 30;
 	var radius;
-
-	////////////////////////////
-
-	var wave_view;
-	var WIDTH = 512;
-	var HEIGHT = 512;
-	
-	var amp_envelop = 0;
-
 
 
 	///////////////////////////
