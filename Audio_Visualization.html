@@ -80,7 +80,7 @@
 			centerX: WIDTH/2,
 			centerY: HEIGHT/2,		
 			radius: dist,
-			speed: (rand(5,10)/1000)*(dist/750)+.015,
+			speed: 100*(rand(5,10)/1000)*(dist/750)+.015,
 			alpha: 1 - Math.abs(dist)/WIDTH,
 			draw: function() {			
 				drawContext.strokeStyle = 'hsla('+this.colorAngle+',100%,50%,1)';	
@@ -229,7 +229,7 @@
 			var updateCount = 3;
 			while(updateCount--){
 				orb.draw(drawContext);
-				//orb.update();		
+				orb.update();		
 			}
 		}
 	}
