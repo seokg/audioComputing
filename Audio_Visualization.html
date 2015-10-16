@@ -5,7 +5,7 @@
 	<title> Audio Visualization </title>
 </head>
 <body>		
-	<h1> Mini Project #1: MIDI-Note-Scaled Spectrum </h1>
+	<h1> Mini Project #1: Audio Visualization </h1>
 	
 	<input id="fileChooseInput" type="file"></input>
 	<button onclick="playSound()">Play</button>
@@ -28,6 +28,13 @@
 	var PITCH_STEP = 1;
 	var pitch_range = [];
 	var pitch_range_hz = [];
+
+	////////////////////////////
+	var wave_view;
+	var WIDTH = 512;
+	var HEIGHT = 512;
+	
+	var amp_envelop = 0;
 		
 
 //////////////////////////////////////////////////////////////////////////
