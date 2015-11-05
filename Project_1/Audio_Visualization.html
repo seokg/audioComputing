@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title> Audio Visualization </title>
+</head>
+<body>		
+	<h1> Mini Project #1: Audio Visualization </h1>
+	
+	<input id="fileChooseInput" type="file"></input>
+	<button onclick="playSound()">Play</button>
+	<button onclick="stopSound()">Stop</button>	  
+
+	<p><canvas id='spec_view' style="background: white;"></canvas></p>
+
+	<script>	
+	var context;
+	var myAudioBuffer = null;
+	var analyser;
+	var source;
+	var spec_view;
+
+	var PITCH_MIN = 36;
+	var PITCH_MAX = 108;
+	var PITCH_STEP = 1;
+	var pitch_range = [];
+	var pitch_range_hz = [];
+
+	//////////////////////////////////////////////////////////////////
+	//////////////////////////////////////////////////////////////////
+
+	var amp_envelope =0;
+	var norm_data;
+	var amp_scale = 100;
+	var sensitivity = 0.1;
+	var current_level;
+	var power;
+	var decay_coef = 0.75;
+
+
+
+	//////////////////////////////////////////////////////////////////
+	//////////////////////////////////////////////////////////////////
+	var barHeight;
+	var wave_view;
+	var WIDTH = 512;
+	var HEIGHT = 512;
+	
+
+
+	// variable for orb ////////
+	var drawContext;
+	var rand;
+	var orbs = [];
+	var orbCount = 30;
+	var radius;
+	////////////////////////////	
+	window.requestAnimFrame=function(){return window.requestAnimationFrame||window.webkitRequestAnimationFrame||window.mozRequestAnimationFrame||window.oRequestAnimationFrame||window.msRequestAnimationFrame||function(a){window.setTimeout(a,1E3/60)}}();
+
+	/////////////////////////////////////////
+	// orb function                       ///
+	//function from codepen.io            ///
+	//http://codepen.io/jackrugile/pen/DGenc/
+	/////////////////////////////////////////
+	function createOrb(mx,my){
+	  var dx = (WIDTH/2) - mx;
+		var dy = (HEIGHT/2) - my;
+		var dist = Math.sqrt(dx * dx + dy * dy);
+		var angle = Math.atan2(dy, dx);
+		orbs.push({
+			x: mx,
+			y: my,
+			lastX: mx,
+			lastY: my,
+			hue: 0,
+			colorAngle: 0,
+			angle: angle + Math.PI/2,
+			//size: .5+dist/250,
+			//size: rand(1,3)/2,
+			size: 1.3,
+			centerX: WIDTH/2,
+			centerY: HEIGHT/2,		
+			radius: dist,
+			//speed: 100*(rand(5,10)/1000)*(dist/750)+.015,
+			speed: 100*(10/1000)*(dist/750)+.015,
+			alpha: 1 - Math.abs(dist)/WIDTH,
+			draw: function() {			
+				drawContext.strokeStyle = 'hsla('+this.colorAngle+',100%,50%,1)';	
+				drawContext.lineWidth = this.size;			
+				drawContext.beginPath();
+				drawContext.moveTo(this.lastX, this.lastY);
+				drawContext.lineTo(this.x, this.y);
+				drawContext.stroke();
+			},	
+			update: function(){
+				var mx = this.x;
+				var my = this.y;	
+				this.lastX = this.x;
+				this.lastY = this.y;
+				var x1 = WIDTH/2;
+				var y1 = HEIGHT/2;
+				var x2 = mx;
+				var y2 = my;		
+				var rise = y1-y2;
+				var run = x1-x2;
+				var slope = -(rise/run);
+				var radian = Math.atan(slope);
+				var angleH = Math.floor(radian*(180/Math.PI));		
+				if(x2 < x1 && y2 < y1){angleH += 180;}		
+				if(x2 < x1 && y2 > y1){angleH += 180;}		
+				if(x2 > x1 && y2 > y1){angleH += 360;}		
+				if(y2 < y1 && slope =='-Infinity'){angleH = 90;}		
+				if(y2 > y1 && slope =='Infinity'){angleH = 270;}		
+				if(x2 < x1 && slope =='0'){angleH = 180;}
+				if(isNaN(angleH)){angleH = 0;}
+				
+				this.colorAngle = angleH;
+				this.x = this.centerX + Math.sin(this.angle*-1) * this.radius;
+				this.y = this.centerY + Math.cos(this.angle*-1) * this.radius;
+				this.angle += this.speed;
+			
+			}
+		});
+	}
+	/////////////////////////////////////////
+	/////////////////////////////////////////
+	/////////////////////////////////////////
+	/////////////////////////////////////////
+	window.onload=function(){
+		// create audio context
+		context = new AudioContext();
+				
+		// file open button
+		var control = document.getElementById("fileChooseInput");
+		control.addEventListener("change", fileChanged, false);
+		
+		// canvas 
+		spec_view = document.getElementById("spec_view");
+		spec_view.width =  WIDTH;
+		spec_view.height = HEIGHT;	
+		var drawContext = spec_view.getContext('2d');
+		
+		spec_view = document.getElementById("spec_view");
+		spec_view.width =  WIDTH;
+		spec_view.height = HEIGHT;
+		drawContext = spec_view.getContext('2d');
+		drawContext.lineCap = 'round';
+		rand = function(rMi, rMa){return ~~((Math.random()*(rMa-rMi+1))+rMi);} // Math.random: 0 ~ 1
+
+		// analyzer
+	    analyser = context.createAnalyser();
+	    analyser.fftSize = 4096;
+		
+		// pitch range of interest
+		for (var pitch = PITCH_MIN; pitch <= PITCH_MAX; pitch = pitch + PITCH_STEP) 
+		{
+			pitch_range.push(pitch);
+			pitch_range_hz.push(midi2hertz(pitch))
+		}	
+	}
+	
+	function midi2hertz(midi) {
+		var hertz;
+		///// YOUR CODE IS HERE /////
+		hertz = (Math.pow(2,(midi-69)/12)) * 440;	
+		/////////////////////////////
+		return hertz;
+	}
+	
+	function draw_spec() {
+		
+
+		// 2d canvas context
+		drawContext = spec_view.getContext('2d');
+		///////////////////////////////////////////////////
+		//              data for frequency domain        //
+		///////////////////////////////////////////////////
+		var dataArray = new Uint8Array(analyser.frequencyBinCount);
+		analyser.getByteFrequencyData(dataArray);
+		// MIDI scale power
+		var midi_power = new Uint8Array(pitch_range_hz.length);
+		//fill midi_power list
+		var sample_rate = 44100.0;
+		for (var i =1 ; i<midi_power.length-1; i++){
+			var idx = pitch_range_hz [i] *analyser.fftSize/ (0.5*sample_rate);
+			idx = Math.round(idx);
+			midi_power[i] = dataArray[idx];
+		}
+		
+		/////////////////////////////
+		var barWidth = (WIDTH / midi_power.length);
+		barHeight = new Uint8Array(pitch_range_hz.length);
+		var x = 0;	
+		
+		for(var i = 0; i < midi_power.length; i++) {
+			barHeight[i] = (midi_power[i] + analyser.minDecibels)*HEIGHT/190.0;
+			x += barWidth + 1;
+			
+			if (x > WIDTH)
+				break;
+		}
+		//////////////////////////////
+
+
+
+
+
+		///////////////////////////////////////////////////
+		//              data for time domain             //
+		///////////////////////////////////////////////////
+		var dataArray_time = new Float32Array(analyser.frequencyBinCount);
+		analyser.getFloatTimeDomainData(dataArray_time);
+
+		current_level = 0;
+		for (i=0; i<analyser.frequencyBinCount; i++ ){
+
+			norm_data = (dataArray[i]^2)^0.5 ;
+			power = 10^norm_data/20;
+
+			current_level = current_level + amp_scale*Math.log(1.0+1.0/sensitivity*power)/Math.log(1.0+1.0/sensitivity);
+		}
+		if (current_level>amp_envelope){
+			amp_envelope = current_level;
+		}
+		else{
+			amp_envelope = decay_coef* amp_envelope;
+		}
+
+
+
+
+		
+		if(1){ // trailing circle: make it always true
+			drawContext.fillStyle = 'rgba(0,0,0,.1)';
+			drawContext.fillRect(0,0,WIDTH,HEIGHT);
+		}
+		var j = 1;
+		var max_barheight=0;
+		var max_index=0;
+		while (j<barHeight.length){ // extracting the maximum power in freq domain
+			if (barHeight[j] > max_barheight){
+				max_barheight = barHeight[j];
+				max_index = j;
+			}
+			j++;
+		}
+		
+		
+		
+		// drawing the orb
+		var orb = orbs[max_index];
+		var orb_loudness = orbs [orbs.length-1];
+		// finding the distance for speed calc
+		var mx = orb_loudness.x;
+		var my = orb_loudness.y;
+		var dx = (WIDTH/2) - mx;
+		var dy = (HEIGHT/2) - my;
+		var dist = Math.sqrt(dx * dx + dy * dy)
+		orb_loudness.speed = 10*(10/1000)*(dist/750)+.015;
+		// resizing the orb occording to the loudness
+		orb_loudness.size = (amp_envelope/Math.pow(10,4) - 30 );
+		orb_loudness.size = Math.pow(orb_loudness.size,2);
+		console.log(orb_loudness.size);
+
+		orb.draw(drawContext);
+		orb.update();		
+		orb_loudness.draw(drawContext);
+		orb_loudness.update();
+
+
+		// queue for next callback
+		window.requestAnimationFrame(draw_spec);
+	}
+	
+	function fileChanged(e){
+		var file = e.target.files[0];
+		var fileReader = new FileReader();
+		fileReader.onload = fileLoaded;
+		fileReader.readAsArrayBuffer(file);
+	}
+	function fileLoaded(e){
+	    context.decodeAudioData(e.target.result, function(buffer) {
+	      source = context.createBufferSource();
+	      source.buffer = buffer;
+	      //connect source to analyser
+	      source.connect(context.destination);
+	      source.connect(analyser);
+	    });
+	}
+	function playSound() {
+	  source.start();
+	  // visualize audio//////////////////////////////////////////
+		var count = PITCH_MAX - PITCH_MIN; // need to be changed to frequency size
+		while(count--){
+			var index = 0 ;
+			createOrb(WIDTH/2, HEIGHT/2+(count*2));	// creaing orbs
+			index ++;
+		}
+		createOrb(128,128);
+
+
+			
+	  // visualize audio
+	  draw_spec();
+	}
+	function stopSound() {
+	  if (source) {
+	    source.stop();
+	  }
+	}	   	
+	
+	
+	</script>
+</body>
+</html>
