@@ -313,7 +313,7 @@
 
 	///////////////////////////////////////////
 	// play and stop
-	function playSound(anybuffer) {
+/*	function playSound(anybuffer) {
 		// create buffersource
 		source = context.createBufferSource();
 		source.buffer = anybuffer;
@@ -359,7 +359,7 @@
 			loopPlayBack = true;
 		}		
 	}
-
+*/
 	// function for bypass
 	function toggleDelayBypass(){
 		if (delay_bypass){
@@ -391,3 +391,42 @@
 		updateReverb();
 	}
 
+
+///////////////////////////////////////////////
+//			    Audio Input                  //
+///////////////////////////////////////////////
+  if (!navigator.getUserMedia)
+    navigator.getUserMedia = (navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia);
+                
+  if (!navigator.getUserMedia)
+    alert("Error: getUserMedia not supported!");
+            
+  // get audio input streaming         
+  navigator.getUserMedia({audio: true}, onStream, onStreamError)
+
+  // successCallback
+  function onStream(stream) {
+      var input = context.createMediaStreamSource(stream);
+    
+    // Connect graph
+    	input.connect(biquad);
+		biquad.connect(delay);
+		//--------------------------------------------
+		delay.connect(convolver);
+		
+		delay.connect(feedbackGain);
+		feedbackGain.connect(delay);
+		//--------------------------------------------
+		convolver.connect(wetGain);
+		wetGain.connect(context.destination);
+
+		delay.connect(dryGain);
+		dryGain.connect(context.destination);               
+    // visualize audio
+    draw_spec();  
+  }
+  
+  // errorCallback       
+  function onStreamError(error) {
+    console.error('Error getting microphone', error);
+  }
