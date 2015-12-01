@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<!-- saved from url=(0046)http://s.codepen.io/lwoodrick/fullpage/ZYzVWy? -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta charset="UTF-8">
+    <meta name="google" value="notranslate">
+
+
+    <title>CodePen - Li'l Singing Dudes</title>
+    
+    
+    <link rel="stylesheet" href="normalize.css">
+
+    
+        <style>
+      @import url(http://fonts.googleapis.com/css?family=Fredoka+One);
+* {
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+}
+
+h1 {
+  font-family: "Fredoka One";
+  text-align: center;
+  font-size: 80px;
+  color: #444;
+  margin-bottom: 0px;
+}
+
+p {
+  font-family: "Fredoka One";
+  text-align: center;
+  font-size: 30px;
+  color: #777;
+  margin-top: 15px;
+}
+
+body {
+  background: -webkit-linear-gradient(315deg, #fff 25%, transparent 25%) -50px 0, -webkit-linear-gradient(225deg, #fff 25%, transparent 25%) -50px 0, -webkit-linear-gradient(135deg, #fff 25%, transparent 25%), -webkit-linear-gradient(45deg, #fff 25%, transparent 25%);
+  background: linear-gradient(135deg, #fff 25%, transparent 25%) -50px 0, linear-gradient(225deg, #fff 25%, transparent 25%) -50px 0, linear-gradient(315deg, #fff 25%, transparent 25%), linear-gradient(45deg, #fff 25%, transparent 25%);
+  background-size: 100px 100px;
+  background-color: #EEE;
+}
+
+.lildude-home {
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+}
+
+.lildude, .lildude2, .lildude3 {
+  position: absolute;
+  left: calc(50% - 100px);
+  bottom: 0%;
+  height: 60%;
+  width: 200px;
+  background-color: #FF9624;
+  margin: 0 auto;
+  border-radius-topleft: 100px;
+  border-radius-topright: 100px;
+  border-radius-bottomright: 0;
+  border-radius-bottomleft: 0;
+  border-top-left-radius: 100px;
+  border-top-right-radius: 100px;
+  border-bottom-right-radius: 0;
+  border-bottom-left-radius: 0;
+  -webkit-transition: height ease 0.5s;
+          transition: height ease 0.5s;
+}
+.lildude:hover, .lildude2:hover, .lildude3:hover {
+  height: 55%;
+  -webkit-transition: height ease 0.5s;
+          transition: height ease 0.5s;
+}
+.lildude .lildude-eye-l, .lildude2 .lildude-eye-l, .lildude3 .lildude-eye-l {
+  height: 20px;
+  width: 20px;
+  float: left;
+  position: relative;
+  top: 70px;
+  left: 60px;
+  background-color: #fff;
+  border-radius: 10px;
+}
+.lildude .lildude-eye-r, .lildude2 .lildude-eye-r, .lildude3 .lildude-eye-r {
+  height: 20px;
+  width: 20px;
+  float: left;
+  position: relative;
+  top: 70px;
+  left: 100px;
+  background-color: #fff;
+  border-radius: 10px;
+}
+.lildude .lildude-mouth, .lildude2 .lildude-mouth, .lildude3 .lildude-mouth {
+  width: 80px;
+  height: 20px;
+  border-radius: 10px;
+  position: relative;
+  top: 115px;
+  left: 60px;
+  background-color: #fff;
+  -webkit-transition: height ease 0.25s;
+          transition: height ease 0.25s;
+}
+.lildude:active, .lildude2:active, .lildude3:active {
+  height: 75%;
+  -webkit-transition: height ease 0.5s;
+          transition: height ease 0.5s;
+}
+.lildude:active .lildude-mouth, .lildude2:active .lildude-mouth, .lildude3:active .lildude-mouth {
+  height: 70px;
+  -webkit-transition: height ease 0.25s;
+          transition: height ease 0.25s;
+}
+
+.lildude2 {
+  left: calc(50% + 150px);
+  background-color: #A8D30D;
+}
+.lildude2 .lildude-mouth {
+  width: 80px;
+  height: 20px;
+  border-radius: 10px;
+  position: relative;
+  top: 115px;
+  left: 60px;
+  background-color: #fff;
+  -webkit-transition: tremolo ease 0.1s;
+          transition: tremolo ease 0.1s;
+}
+.lildude2:active {
+  height: 75%;
+  -webkit-transition: height ease 0.5s;
+          transition: height ease 0.5s;
+}
+.lildude2:active .lildude-eye-l {
+  width: 30px;
+  height: 10px;
+  left: 55px;
+  top: 75px;
+  -webkit-transition: width ease 0.1s, left ease 0.1s, height ease 0.1s, top ease 0.1s;
+          transition: width ease 0.1s, left ease 0.1s, height ease 0.1s, top ease 0.1s;
+}
+.lildude2:active .lildude-eye-r {
+  width: 30px;
+  height: 10px;
+  left: 85px;
+  top: 75px;
+  -webkit-transition: width ease 0.1s, left ease 0.1s, height ease 0.1s, top ease 0.1s;
+          transition: width ease 0.1s, left ease 0.1s, height ease 0.1s, top ease 0.1s;
+}
+.lildude2:active .lildude-mouth {
+  -webkit-transition: height ease 0.1s;
+          transition: height ease 0.1s;
+  height: 150px;
+  -webkit-animation: tremolo ease 0.1s infinite;
+          animation: tremolo ease 0.1s infinite;
+}
+@-webkit-keyframes tremolo {
+  0% {
+    -webkit-transform: rotate(-3deg);
+            transform: rotate(-3deg);
+  }
+  50% {
+    -webkit-transform: rotate(3deg);
+            transform: rotate(3deg);
+  }
+  100% {
+    -webkit-transform: rotate(-3deg);
+            transform: rotate(-3deg);
+  }
+}
+@keyframes tremolo {
+  0% {
+    -webkit-transform: rotate(-3deg);
+            transform: rotate(-3deg);
+  }
+  50% {
+    -webkit-transform: rotate(3deg);
+            transform: rotate(3deg);
+  }
+  100% {
+    -webkit-transform: rotate(-3deg);
+            transform: rotate(-3deg);
+  }
+}
+.lildude3 {
+  left: calc(50% - 350px);
+  background-color: #C416B8;
+}
+.lildude3 .lildude-mouth {
+  width: 80px;
+  height: 20px;
+  border-radius: 10px;
+  position: relative;
+  top: 115px;
+  left: 60px;
+  background-color: #fff;
+  -webkit-transition: width ease 0.25s, left ease 0.25s;
+          transition: width ease 0.25s, left ease 0.25s;
+}
+.lildude3:active {
+  height: 75%;
+  -webkit-transition: height ease 0.5s;
+          transition: height ease 0.5s;
+}
+.lildude3:active .lildude-mouth {
+  height: 20px;
+  width: 20px;
+  left: 90px;
+  -webkit-transition: width ease 0.25s, left ease 0.25s;
+          transition: width ease 0.25s, left ease 0.25s;
+}
+
+    </style>
+
+    <script>
+  window.console = window.console || function(t) {};
+</script>
+
+    
+    
+  <style type="text/css"></style></head>
+
+  <body>
+
+    <div class="lildude-home"><h1>Li'l Singing Dudes</h1><p>(Prod them to watch them sing! For real this time!)</p></div><div class="lildude"><div class="lildude-eye-l"></div><div class="lildude-eye-r"></div><div class="lildude-mouth"></div></div><div class="lildude2"><div class="lildude-eye-l"></div><div class="lildude-eye-r"></div><div class="lildude-mouth"></div></div><div class="lildude3"><div class="lildude-eye-l"></div><div class="lildude-eye-r"></div><div class="lildude-mouth"></div></div><audio id="dude3song" loop="" preload="auto" src="http://laurenwoodrick.com/ooo.mp3"><p>Your browser does not support the audio element.</p></audio><audio id="dude1song" loop="" preload="auto" src="http://laurenwoodrick.com/aaa.mp3"><p>Your browser does not support the audio element.</p></audio><audio id="dude2song" loop="" preload="auto" src="http://laurenwoodrick.com/ahh.mp3"><p>Your browser does not support the audio element.</p></audio>
+      <script src="stopExecutionOnTimeout-f961f59a28ef4fd551736b43f94620b5.js"></script>
+
+    <script src="jquery.min.js"></script>
+
+        <script>
+      var audio = $('#dude1song')[0];
+$('.lildude').mousedown(function () {
+    audio.play();
+});
+$('.lildude').mouseup(function () {
+    audio.pause();
+});
+var audio2 = $('#dude2song')[0];
+$('.lildude2').mousedown(function () {
+    audio2.play();
+});
+$('.lildude2').mouseup(function () {
+    audio2.pause();
+});
+var audio3 = $('#dude3song')[0];
+$('.lildude3').mousedown(function () {
+    audio3.play();
+});
+$('.lildude3').mouseup(function () {
+    audio3.pause();
+});
+      //@ sourceURL=pen.js
+    </script>
+
+    
+    <script>
+  if (document.location.search.match(/type=embed/gi)) {
+    window.parent.postMessage("resize", "*");
+  }
+</script>
+
+    
+  
+
+ 
+</body></html>
