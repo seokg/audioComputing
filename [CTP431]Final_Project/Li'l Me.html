@@ -1,0 +1,431 @@
+<style>
+/* what has to be done*/
+/*
+1. adding mouth for various sound 
+2. adding animation with pitch tracking
+3. how to make vowel pitch tracking
+4. make a vowel output
+5.
+*/
+</style>
+<!DOCTYPE html>
+
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta charset="UTF-8">
+    <meta name="google" value="notranslate">
+    <meta http-equiv="X-UA-Compatible" content="IE=7" />
+    <script type="text/javascript" src="./jsgl.min.js"></script>
+
+    <title>Li'l Me</title>
+    
+    
+    <link rel="stylesheet" href="normalize.css">
+
+    
+        <style>
+
+/*---------------------------------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------------------------------*/
+/*-------------------------------------NO EDITTING --------------------------------------------------*/
+/*---------------------------------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------------------------------*/
+      @import url(http://fonts.googleapis.com/css?family=Fredoka+One);
+* {
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+}
+
+h1 {
+  font-family: "Fredoka One";
+  text-align: center;
+  font-size: 80px;
+  color: #444;
+  margin-bottom: 0px;
+}
+
+p {
+  font-family: "Fredoka One";
+  text-align: center;
+  font-size: 30px;
+  color: #777;
+  margin-top: 15px;
+}
+
+
+body {
+  background: -webkit-linear-gradient(315deg, #fff 25%, transparent 25%) -50px 0, -webkit-linear-gradient(225deg, #fff 25%, transparent 25%) -50px 0, -webkit-linear-gradient(135deg, #fff 25%, transparent 25%), -webkit-linear-gradient(45deg, #fff 25%, transparent 25%);
+  background: linear-gradient(135deg, #fff 25%, transparent 25%) -50px 0, linear-gradient(225deg, #fff 25%, transparent 25%) -50px 0, linear-gradient(315deg, #fff 25%, transparent 25%), linear-gradient(45deg, #fff 25%, transparent 25%);
+  background-size: 100px 100px;
+  background-color: #EEE;
+}
+
+.lildude-home {
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+}
+
+
+#canvas {
+    position: absolute;
+    top:0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin:auto;
+}
+/*---------------------------------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------------------------------*/
+    </style>
+
+	<script>
+	window.console = window.console || function(t) {};
+	</script>    
+  <style type="text/css"></style>
+
+
+</head>
+	<body style="height: 100%; margin: 0;">
+
+    <!--frequency data-->
+    <div><canvas id='spec_view' style="background: white;"></canvas></div>
+    <!--HOME-->
+    <div class="lildude-home"><h1>Minion</h1><p>(Make a Vowel Sound!)</p></div>
+<!--------------------------------------UNUSED INFORMATION-------------------------------------->    
+<!--------------------------------------AUDIO PLAY BACK-------------------------------------->
+<!---------------------------------------------------------------------------------------------->
+    <div class="canvas"><canvas id="canvas" style="border:1px solid #c3c3c3;" ></canvas></div>
+<script>
+var canvas = document.getElementById('canvas');
+
+canvas.width  = window.innerWidth/2;
+canvas.height = window.innerHeight;
+
+var body = canvas.getContext('2d');
+var eye = canvas.getContext('2d');
+var eyeball = canvas.getContext('2d');
+var iris = canvas.getContext('2d');
+var goggle = canvas.getContext('2d');
+var pants = canvas.getContext('2d');
+
+var hair = canvas.getContext('2d');
+
+var raf;
+var running = false;
+
+var minion = {
+  x: window.innerWidth/2/2,
+  y: window.innerHeight-300,
+  vx: 16,
+  vy: 4,
+
+  radius: 100,
+  eyeradius: 15,
+  eyeballradius:32.5,
+  irisradius:10,
+  goggleradius:32.5,
+
+  colorbody: 'gold',
+  coloreye:'brown',
+  coloreyeball: 'white',
+  coloriris: 'black',
+  colorgoggle: 'grey',
+  colorpants:'blue',
+
+  draw: function() {
+
+// body part
+    body.beginPath();
+    body.arc(this.x, this.y, this.radius, 0, Math.PI, true);
+    body.rect(this.x- this.radius,this.y, this.radius *2, this.radius/2+20);
+    body.closePath();
+    body.fillStyle = this.colorbody;
+    body.fill();
+// pants
+
+    pants.beginPath();
+    pants.rect(this.x- this.radius,this.y +this.radius/2+20, this.radius *2, this.radius);
+    pants.closePath();
+    pants.fillStyle = this.colorpants;
+    pants.fill();  
+// eye balls  
+    eyeball.beginPath();
+    eyeball.arc(this.x - this.radius/3, this.y-10, this.eyeballradius, 0, Math.PI*2, true);
+    eyeball.arc(this.x + this.radius/3, this.y-10, this.eyeballradius, 0, Math.PI*2, true);
+    eyeball.closePath();
+    eyeball.fillStyle = this.coloreyeball;
+    eyeball.fill();
+// eye color
+    eye.beginPath();
+    eye.arc(this.x - this.radius/3, this.y-10, this.eyeradius, 0, Math.PI*2, true);
+    eye.arc(this.x + this.radius/3, this.y-10, this.eyeradius, 0, Math.PI*2, true);
+    eye.closePath();
+    eye.fillStyle = this.coloreye;
+    eye.fill();    
+// iris
+    iris.beginPath();
+    iris.arc(this.x - this.radius/3, this.y-10, this.irisradius, 0, Math.PI*2, true);
+    iris.arc(this.x + this.radius/3, this.y-10, this.irisradius, 0, Math.PI*2, true);
+    iris.closePath();
+    iris.fillStyle = this.coloriris;
+    iris.fill();
+// goggle
+    goggle.beginPath();
+    goggle.arc(this.x - this.radius/3, this.y-10, this.goggleradius, 0, Math.PI*2, true);
+
+    goggle.closePath();
+    goggle.lineWidth = 10;
+    goggle.strokeStyle = this.colorgoggle;
+    goggle.stroke();
+    
+    goggle.beginPath();
+    goggle.arc(this.x + this.radius/3, this.y-10, this.goggleradius, 0, Math.PI*2, true);
+    goggle.closePath();
+    goggle.lineWidth = 10;
+    goggle.strokeStyle = this.colorgoggle;
+    goggle.stroke();   
+// hair     
+  }
+};
+function animate(pitch_range_hz) {
+  body.clearRect(0,0, canvas.width, canvas.height);
+  pants.clearRect(0,0, canvas.width, canvas.height);
+  eyeball.clearRect(0,0, canvas.width, canvas.height);
+  eye.clearRect(0,0, canvas.width, canvas.height);
+  iris.clearRect(0,0, canvas.width, canvas.height);
+  goggle.clearRect(0,0, canvas.width, canvas.height);
+  
+  minion.draw();
+  if (Math.round(pitch_range_hz) > 100 && Math.round(pitch_range_hz) <2400){
+  minion.x += minion.vx;
+  minion.y += minion.vy;
+    if (minion.y + minion.vy > canvas.height || minion.y + minion.vy < 0) {
+    minion.vy = -minion.vy;
+
+    } else {
+
+    }
+     if (minion.x + minion.vx > canvas.width || minion.x + minion.vx < 0) {
+      minion.vx = -minion.vx;
+
+    }
+  }
+
+/*  minion.x += minion.vx;
+  minion.y += minion.vy;
+
+  if (minion.y + minion.vy > canvas.height || minion.y + minion.vy < 0) {
+  minion.vy = -minion.vy;
+
+} else {
+
+}
+ if (minion.x + minion.vx > canvas.width || minion.x + minion.vx < 0) {
+  minion.vx = -minion.vx;
+
+ } */
+
+ // raf = window.requestAnimationFrame(animate);
+
+};
+
+
+
+//window.requestAnimationFrame(animate);
+
+
+
+
+  var context;
+  var myAudioBuffer = null;
+  var analyser;
+  
+  var spec_view;
+  var WIDTH = 160;
+  var HEIGHT = 80;
+  
+  var PITCH_MIN = 36;
+  var PITCH_MAX = 96;
+  var PITCH_STEP = 0.25;
+  var pitch_range = [];
+  var pitch_range_hz = [];
+  var NUM_HARMONICS = 15;
+  
+
+  //
+  window.onload=function(){   
+    // canvas 
+    spec_view = document.getElementById("spec_view");
+    spec_view.width =  WIDTH;
+    spec_view.height = HEIGHT;  
+    
+    // create audio context
+    context = new AudioContext();
+    
+    // analyzer
+      analyser = context.createAnalyser();
+      analyser.fftSize = 2048;
+    analyser.smoothingTimeConstant = 0;   
+    
+    // pitch range of interest
+    for (var pitch = PITCH_MIN; pitch <= PITCH_MAX; pitch = pitch + PITCH_STEP) 
+    {
+      pitch_range.push(pitch);
+      pitch_range_hz.push(midi2hertz(pitch))
+    }   
+  }
+  
+  function midi2hertz(midi) {
+    return Math.pow(2,(midi-69.0)/12.0)*440.0;
+  }
+  
+  function draw_spec() {
+    // 2d canvas context
+    var drawContext = spec_view.getContext('2d');
+    
+    // fill rectangular
+    drawContext.fillStyle = 'rgb(200, 200, 200)';
+    drawContext.fillRect(0, 0, WIDTH, HEIGHT);
+
+    // drawing line setting
+    drawContext.lineWidth = 2;
+    drawContext.strokeStyle = 'rgb(0, 0, 0)';
+    drawContext.beginPath();
+        
+    // get samples 
+    var dataArray = new Float32Array(analyser.frequencyBinCount);
+    analyser.getFloatFrequencyData(dataArray);
+    
+    var freq_scale = 10;
+    var sliceWidth = WIDTH * 1.0 / (dataArray.length/freq_scale);
+    var x = 0;
+
+    // display spectrum up to Nyquist_Frequency/10
+    for (var i = 0; i < dataArray.length/freq_scale; i++) {
+          var v = (dataArray[i] + 100)/50;
+          var y = HEIGHT - v * HEIGHT/2;
+
+        if(i === 0) {
+            drawContext.moveTo(x, y);
+          } else {
+            drawContext.lineTo(x, y);
+          }
+
+          x += sliceWidth;
+    }
+
+    // last touch
+    drawContext.lineTo(draw_spec.width, draw_spec.height/2);
+    drawContext.stroke();
+
+    //
+    // pitch detection
+    //
+    var pitch_likelihood = new Float32Array(pitch_range_hz.length);
+    var power_likelihood = new Float32Array(pitch_range_hz.length);
+    
+    var power = 0;
+    
+    for (var i = 0; i < dataArray.length; i++) {
+      var power_amp = Math.pow(10,dataArray[i]/10.0);
+      binfrqs = i/analyser.fftSize*context.sampleRate;
+      
+      for (var j = 0 ; j <  pitch_range_hz.length; j++) {
+        if ( (binfrqs > pitch_range_hz[j]*0.5) & ( binfrqs <  NUM_HARMONICS* pitch_range_hz[j])) {
+          pitch_weight = 0.5 * (1+ Math.cos(2*Math.PI*binfrqs/pitch_range_hz[j]));        
+          pitch_likelihood[j] = pitch_likelihood[j] + power_amp*pitch_weight;
+          power_likelihood[j] = power_likelihood[j]+ power_amp;
+        }
+      }
+      power = power + power_amp;  
+    }
+    
+    // find max 
+    var max_value = -100.0;
+    var max_index = 0;
+    var harmonicity = 0;
+    for (var j = 0 ; j <  pitch_range_hz.length; j++) {
+      if (max_value < pitch_likelihood[j] ) {
+        max_value = pitch_likelihood[j];
+        max_index = j; 
+      }
+    }
+    harmonicity = max_value/power_likelihood[max_index];
+    //console.log(harmonicity)
+    //console.log(power)
+    console.log(Math.round(pitch_range_hz[max_index]))
+
+    drawContext.font = "10px Arial";
+    if ((harmonicity ))
+    // & (power > 0.00001) )
+    {
+      drawContext.strokeText(Math.round(pitch_range_hz[max_index]) + " Hz",100,50);
+      drawContext.strokeText(pitch_range[max_index]+ " ST",100,100);
+
+      
+      window.requestAnimationFrame(function(){
+        animate(pitch_range_hz[max_index]);
+      });
+      drawContext.fillStyle = 'rgb(100,0,0)';
+      drawContext.fillRect(pitch_range_hz[max_index]/context.sampleRate*WIDTH*2*freq_scale-1, 0, 2, HEIGHT);
+    }
+
+    // queue for next callback
+    window.requestAnimationFrame(draw_spec);
+  }
+
+
+
+
+
+
+
+
+  </script>
+
+
+ <!-------------------------------------- AUDIO INPUT MIC -------------------------------------->
+
+<script>
+  var context = new AudioContext();
+  if (!navigator.getUserMedia)
+    navigator.getUserMedia = (navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia);
+                
+  if (!navigator.getUserMedia)
+    alert("Error: getUserMedia not supported!");
+            
+  // get audio input streaming         
+  navigator.getUserMedia({audio: true}, onStream, onStreamError)
+
+  // successCallback
+  function onStream(stream) {
+      var input = context.createMediaStreamSource(stream);
+    
+    // Connect graph
+    	input.connect(analyser);             
+    // visualize audio
+    draw_spec();  
+  }
+  
+  // errorCallback       
+  function onStreamError(error) {
+    console.error('Error getting microphone', error);
+  }
+
+</script>
+<!-------------<div class="canvas"><canvas id="canvas" style="border:1px solid #c3c3c3;" ></canvas></div>---------------------------------------------------------------------------------> 
+
+
+<script>
+
+</script>
+
+
+	</body>
+</html>
