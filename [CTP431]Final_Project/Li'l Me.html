@@ -202,7 +202,7 @@ function animate(pitch_range_hz) {
   goggle.clearRect(0,0, canvas.width, canvas.height);
   
   minion.draw();
-  if (Math.round(pitch_range_hz) > 100 && Math.round(pitch_range_hz) <2400){
+  if (Math.round(pitch_range_hz) > 100 && Math.round(pitch_range_hz) <400){
   minion.x += minion.vx;
   minion.y += minion.vy;
     if (minion.y + minion.vy > canvas.height || minion.y + minion.vy < 0) {
