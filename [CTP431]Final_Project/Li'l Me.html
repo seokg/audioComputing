@@ -411,7 +411,7 @@ function animate(pitch_range_hz) {
                
         max_value = pitch_likelihood[j];
         max_index = j;
-        j = j + 5;
+        j = j + 10;
       }
     }
 
@@ -423,20 +423,20 @@ function animate(pitch_range_hz) {
     if ((harmonicity ))
     // & (power > 0.00001) )
     {
-      drawContext.strokeText(Math.round(pitch_range_hz[max_index]) + " Hz",100,50);
-      drawContext.strokeText(pitch_range[max_index]+ " ST",100,100);
+      drawContext.strokeText(Math.round(pitch_range_hz[max_index_prev]) + " Hz",100,50);
+      drawContext.strokeText(pitch_range[max_index_prev]+ " ST",100,100);
 
       
       window.requestAnimationFrame(function(){
-        animate(pitch_range_hz[max_index]);
+        animate(pitch_range_hz[max_index_prev]);
       });
 
       drawContext.fillStyle = 'rgb(100,0,0)';
-      drawContext.fillRect(pitch_range_hz[max_index]/context.sampleRate*WIDTH*2*freq_scale-1, 0, 2, HEIGHT);
+      drawContext.fillRect(pitch_range_hz[max_index_prev]/context.sampleRate*WIDTH*2*freq_scale-1, 0, 2, HEIGHT);
 
 
       drawContext.fillStyle = 'rgb(0,100,0)';
-      drawContext.fillRect(pitch_range_hz[max_index_prev]/context.sampleRate*WIDTH*2*freq_scale-1, 0, 2, HEIGHT);
+      drawContext.fillRect(pitch_range_hz[max_index]/context.sampleRate*WIDTH*2*freq_scale-1, 0, 2, HEIGHT);
 
 
     }
