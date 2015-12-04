@@ -380,39 +380,24 @@ function animate(pitch_range_hz) {
     
     // find max 
     var max_value = -100.0;
-    var max_value_prev = -102.0;
-    var max_index = 0;
+    var max_index_prev=0
     var harmonicity = 0;
-    var slope = 0; 
-    var pre_slope = 0;
 
 
+    for (var j = 0 ; j <  pitch_range_hz.length; j++) {
 
-    /*var h1;
-    var h2;
-    var flag=0;
-    for (var j = 0 ; j <  pitch_range_hz.length - 1; j++){
-      pre_slope = slope;
-      slope = (pitch_likelihood[j] - pitch_likelihood[j+1]);
-      if (pre_slope * slope > 0 ){
-
-      }else if (pre_slope * slope < 0  && (flag == 0)){
-        h1 = j;
-        flag = 1;
-      }else if (pre_slope * slope < 0  && (flag == 1)){
-        h2 = j;
+      if (max_value < pitch_likelihood[j]) {    
+        max_value = pitch_likelihood[j];
+        max_index_prev = j;
       }
     }
-*/
-    for (var j = 0 ; j <  pitch_range_hz.length; j++) {
-      if (max_value < pitch_likelihood[j] ) {
-        max_value_prev =  max_value;
-        max_index_prev = max_index; 
-               
+    var max_value = -100.0;
+    var max_index = 0;
+    for (j = max_index_prev +10 ; j <  pitch_range_hz.length; j++){
+       if (max_value < pitch_likelihood[j]){
         max_value = pitch_likelihood[j];
         max_index = j;
-        j = j + 10;
-      }
+       }
     }
 
 
