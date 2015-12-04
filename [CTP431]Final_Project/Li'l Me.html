@@ -202,6 +202,38 @@ function animate(pitch_range_hz) {
   goggle.clearRect(0,0, canvas.width, canvas.height);
   
   minion.draw();
+
+  //ah:104
+  //eh:112
+  //ee:160
+  //oh:149
+  //oo:125
+
+  //AH
+  if (Math.round(pitch_range_hz) > 100 && Math.round(pitch_range_hz) <110){
+
+  }
+  //EH
+  else if(Math.round(pitch_range_hz) > 110 && Math.round(pitch_range_hz) <115){
+
+  }
+  //EE
+  else if(Math.round(pitch_range_hz) > 135 && Math.round(pitch_range_hz) <145){
+
+  }
+  //OH
+  else if(Math.round(pitch_range_hz) > 250 && Math.round(pitch_range_hz) <355){
+
+  }
+  //
+  else if(Math.round(pitch_range_hz) > 115 && Math.round(pitch_range_hz) <120){
+
+  }
+  else{
+
+  }
+
+
   if (Math.round(pitch_range_hz) > 100 && Math.round(pitch_range_hz) <400){
   minion.x += minion.vx;
   minion.y += minion.vy;
@@ -348,32 +380,62 @@ function animate(pitch_range_hz) {
     
     // find max 
     var max_value = -100.0;
+    var max_value_prev = -102.0;
     var max_index = 0;
     var harmonicity = 0;
-    for (var j = 0 ; j <  pitch_range_hz.length; j++) {
-      if (max_value < pitch_likelihood[j] ) {
-        max_value = pitch_likelihood[j];
-        max_index = j; 
+    var slope = 0; 
+    var pre_slope = 0;
+    var h1;
+    var h2;
+    var flag=0;
+    for (var j = 0 ; j <  pitch_range_hz.length - 1; j++){
+      pre_slope = slope;
+      slope = (pitch_likelihood[j] - pitch_likelihood[j+1]);
+      if (pre_slope * slope > 0 ){
+
+      }else if (pre_slope * slope < 0  && (flag == 0)){
+        h1 = j;
+        flag = 1;
+      }else if (pre_slope * slope < 0  && (flag == 1)){
+        h2 = j;
       }
     }
+
+    for (var j = 0 ; j <  pitch_range_hz.length; j++) {
+      if (max_value < pitch_likelihood[j] ) {
+        max_value_prev =  max_value;
+        max_index_prev = max_index; 
+               
+        max_value = pitch_likelihood[j];
+        max_index = j;
+
+      }
+    }
+
+
     harmonicity = max_value/power_likelihood[max_index];
-    //console.log(harmonicity)
-    //console.log(power)
-    console.log(Math.round(pitch_range_hz[max_index]))
+
 
     drawContext.font = "10px Arial";
     if ((harmonicity ))
     // & (power > 0.00001) )
     {
-      drawContext.strokeText(Math.round(pitch_range_hz[max_index]) + " Hz",100,50);
-      drawContext.strokeText(pitch_range[max_index]+ " ST",100,100);
+      drawContext.strokeText(Math.round(pitch_range_hz[h1]) + " Hz",100,50);
+      drawContext.strokeText(pitch_range[h1]+ " ST",100,100);
 
       
       window.requestAnimationFrame(function(){
-        animate(pitch_range_hz[max_index]);
+        animate(pitch_range_hz[h1]);
       });
+
       drawContext.fillStyle = 'rgb(100,0,0)';
-      drawContext.fillRect(pitch_range_hz[max_index]/context.sampleRate*WIDTH*2*freq_scale-1, 0, 2, HEIGHT);
+      drawContext.fillRect(pitch_range_hz[h1]/context.sampleRate*WIDTH*2*freq_scale-1, 0, 2, HEIGHT);
+
+
+      drawContext.fillStyle = 'rgb(0,100,0)';
+      drawContext.fillRect(pitch_range_hz[h2]/context.sampleRate*WIDTH*2*freq_scale-1, 0, 2, HEIGHT);
+
+
     }
 
     // queue for next callback
