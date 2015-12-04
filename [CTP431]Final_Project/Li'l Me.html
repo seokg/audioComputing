@@ -393,7 +393,7 @@ function animate(pitch_range_hz) {
     }
     var max_value = -100.0;
     var max_index = 0;
-    for (j = max_index_prev +10 ; j <  pitch_range_hz.length; j++){
+    for (j = max_index_prev + 30 ; j <  pitch_range_hz.length; j++){
        if (max_value < pitch_likelihood[j]){
         max_value = pitch_likelihood[j];
         max_index = j;
