@@ -408,7 +408,9 @@ function animate(pitch_range_hz) {
     if ((harmonicity ))
     // & (power > 0.00001) )
     {
-      drawContext.strokeText(Math.round(pitch_range_hz[max_index_prev]) + " Hz",100,50);
+      drawContext.strokeText(Math.round(pitch_range_hz[max_index_prev]) + " Hz",100,20);
+      diff =  Math.round(pitch_range_hz[max_index])-Math.round(pitch_range_hz[max_index_prev]);
+      drawContext.strokeText(diff + " Hz",100,40);
       drawContext.strokeText(pitch_range[max_index_prev]+ " ST",100,100);
 
       
