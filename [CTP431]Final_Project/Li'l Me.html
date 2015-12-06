@@ -7,6 +7,13 @@
 4. make a vowel output
 5.
 */
+
+/* IDEA UPDATE 
+From the lab 1 of EE405,
+get a sample of man and woman voice and get the freqeucy data
+from that data we can subtract from the mic input
+
+*/
 </style>
 <!DOCTYPE html>
 
@@ -385,7 +392,6 @@ function animate(pitch_range_hz) {
 
 
     for (var j = 0 ; j <  pitch_range_hz.length; j++) {
-
       if (max_value < pitch_likelihood[j]) {    
         max_value = pitch_likelihood[j];
         max_index_prev = j;
@@ -399,6 +405,7 @@ function animate(pitch_range_hz) {
         max_index = j;
        }
     }
+    console.log(pitch_likelihood);
 
 
     harmonicity = max_value/power_likelihood[max_index];
