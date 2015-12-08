@@ -111,7 +111,7 @@ body {
 <script>
 var canvas = document.getElementById('canvas');
 
-canvas.width  = window.innerWidth/2;
+canvas.width  = window.innerWidth; //window.innerWidth/2;
 canvas.height = window.innerHeight;
 
 var body = canvas.getContext('2d');
@@ -241,7 +241,7 @@ function animate(pitch_range_hz) {
   }
 
 
-  if (Math.round(pitch_range_hz) > 100 && Math.round(pitch_range_hz) <400){
+ // if (Math.round(pitch_range_hz) > 0 && Math.round(pitch_range_hz) <400){
   minion.x += minion.vx;
   minion.y += minion.vy;
     if (minion.y + minion.vy > canvas.height || minion.y + minion.vy < 0) {
@@ -254,7 +254,7 @@ function animate(pitch_range_hz) {
       minion.vx = -minion.vx;
 
     }
-  }
+ // }
 
 /*  minion.x += minion.vx;
   minion.y += minion.vy;
