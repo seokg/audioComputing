@@ -610,7 +610,6 @@ function animate(pitch_range_hz) {
     //
     var pitch_likelihood = new Float32Array(pitch_range_hz.length);
     var power_likelihood = new Float32Array(pitch_range_hz.length);
-    var diff = new Float32Array(pitch_range_hz.length);
     
     var power = 0;
     
@@ -630,84 +629,27 @@ function animate(pitch_range_hz) {
     
     // find max 
     var max_value = -100.0;
-    var max_index_prev=0
+    var max_index = 0;
     var harmonicity = 0;
-
-    var sum = 0;
     for (var j = 0 ; j <  pitch_range_hz.length; j++) {
-      diff[j] = pitch_likelihood[j] - AH[j];
-      diff[j] = Math.pow(diff[j],2);
-      sum += diff[j];
-    }
-    console.log(sum);
-
-
-    for (var j = 0 ; j <  pitch_range_hz.length; j++) {
-      if (max_value < pitch_likelihood[j]) {    
+      if (max_value < pitch_likelihood[j] ) {
         max_value = pitch_likelihood[j];
-        max_index_prev = j;
+        max_index = j; 
       }
     }
-    
-    var max_value = -100.0;
-    var max_index = 0;
-    for (j = max_index_prev + 30 ; j <  pitch_range_hz.length; j++){
-       if (max_value < pitch_likelihood[j]){
-        max_value = pitch_likelihood[j];
-        max_index = j;
-       }
-    }
-    //console.log(pitch_likelihood);
-    
-
     harmonicity = max_value/power_likelihood[max_index];
+    
 
-    drawContext.font = "10px Arial";
-    if ((harmonicity > 0.4) & (power > 0.00001) ){
-      drawContext.strokeText(Math.round(pitch_range_hz[max_index_prev]) + " Hz",100,20);
-      diff =  Math.round(pitch_range_hz[max_index])-Math.round(pitch_range_hz[max_index_prev]);
-      drawContext.strokeText(diff + " Hz",100,40);
-      drawContext.strokeText(pitch_range[max_index_prev]+ " ST",100,100);
-
-      
-      window.requestAnimationFrame(function(){
-        animate(pitch_range_hz[max_index_prev]);
-      });
-
-      drawContext.fillStyle = 'rgb(100,0,0)';
-      drawContext.fillRect(pitch_range_hz[max_index_prev]/context.sampleRate*WIDTH*2*freq_scale-1, 0, 2, HEIGHT);
-
-
-      drawContext.fillStyle = 'rgb(0,100,0)';
-      drawContext.fillRect(pitch_range_hz[max_index]/context.sampleRate*WIDTH*2*freq_scale-1, 0, 2, HEIGHT);
-    }
-
-
-
-
-/*
-    drawContext.font = "10px Arial";
-    if ((harmonicity ))
-    // & (power > 0.00001) )
+    drawContext.font = "30px Arial";
+    if ((harmonicity > 0.8) & (power > 0.00001) )
     {
-      drawContext.strokeText(Math.round(pitch_range_hz[max_index_prev]) + " Hz",100,20);
-      diff =  Math.round(pitch_range_hz[max_index])-Math.round(pitch_range_hz[max_index_prev]);
-      drawContext.strokeText(diff + " Hz",100,40);
-      drawContext.strokeText(pitch_range[max_index_prev]+ " ST",100,100);
-
+      drawContext.strokeText(Math.round(pitch_range_hz[max_index]) + " Hz",100,50);
+      drawContext.strokeText(pitch_range[max_index]+ " ST",100,100);
       
-      window.requestAnimationFrame(function(){
-        animate(pitch_range_hz[max_index_prev]);
-      });
-
       drawContext.fillStyle = 'rgb(100,0,0)';
-      drawContext.fillRect(pitch_range_hz[max_index_prev]/context.sampleRate*WIDTH*2*freq_scale-1, 0, 2, HEIGHT);
-
-
-      drawContext.fillStyle = 'rgb(0,100,0)';
       drawContext.fillRect(pitch_range_hz[max_index]/context.sampleRate*WIDTH*2*freq_scale-1, 0, 2, HEIGHT);
     }
-*/
+
     // queue for next callback
     window.requestAnimationFrame(draw_spec);
   }
