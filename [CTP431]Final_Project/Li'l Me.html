@@ -640,11 +640,12 @@ function animate(pitch_range_hz) {
     harmonicity = max_value/power_likelihood[max_index];
     
 
-    drawContext.font = "30px Arial";
-    if ((harmonicity > 0.8) & (power > 0.00001) )
+    drawContext.font = "5px Arial";
+    if (harmonicity)
+//      (harmonicity > 0.8) & (power > 0.00001) )
     {
-      drawContext.strokeText(Math.round(pitch_range_hz[max_index]) + " Hz",100,50);
-      drawContext.strokeText(pitch_range[max_index]+ " ST",100,100);
+      drawContext.strokeText(Math.round(pitch_range_hz[max_index]) + " Hz",100,10);
+      drawContext.strokeText(pitch_range[max_index]+ " ST",100,20);
       
       drawContext.fillStyle = 'rgb(100,0,0)';
       drawContext.fillRect(pitch_range_hz[max_index]/context.sampleRate*WIDTH*2*freq_scale-1, 0, 2, HEIGHT);
