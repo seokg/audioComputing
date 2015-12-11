@@ -120,15 +120,14 @@ var eyeball = canvas.getContext('2d');
 var iris = canvas.getContext('2d');
 var goggle = canvas.getContext('2d');
 var pants = canvas.getContext('2d');
-
-var hair = canvas.getContext('2d');
+var mouth = canvas.getContext('2d');
 
 var raf;
 var running = false;
 
 var minion = {
-  x: window.innerWidth/2/2,
-  y: window.innerHeight-300,
+  x: window.innerWidth/2,
+  y: window.innerHeight/2,
   vx: 16,
   vy: 4,
 
@@ -137,14 +136,14 @@ var minion = {
   eyeballradius:32.5,
   irisradius:10,
   goggleradius:32.5,
-
+  mouthradius:10,
   colorbody: 'gold',
   coloreye:'brown',
   coloreyeball: 'white',
   coloriris: 'black',
   colorgoggle: 'grey',
   colorpants:'blue',
-
+  colormouth:'black',
   draw: function() {
 
 // body part
@@ -197,52 +196,63 @@ var minion = {
     goggle.lineWidth = 10;
     goggle.strokeStyle = this.colorgoggle;
     goggle.stroke();   
-// hair     
+// mouth
+    mouth.beginPath();
+    mouth.arc(this.x, this.y + this.radius/2, this.mouthradius, 0, Math.PI*2, true);
+    mouth.closePath();
+    mouth.fillStyle = this.colormouth;
+    mouth.fill();
   }
+    
 };
-function animate(pitch_range_hz) {
+
+function animate(string) {
   body.clearRect(0,0, canvas.width, canvas.height);
   pants.clearRect(0,0, canvas.width, canvas.height);
   eyeball.clearRect(0,0, canvas.width, canvas.height);
   eye.clearRect(0,0, canvas.width, canvas.height);
   iris.clearRect(0,0, canvas.width, canvas.height);
   goggle.clearRect(0,0, canvas.width, canvas.height);
-  
+  mouth.clearRect(0,0, canvas.width, canvas.height);
   minion.draw();
+  
+  if (string == "AH"){
+    minion.x += minion.vx;
+    
+  }else if(string == "EH"){
+    minion.x -= minion.vx;
+    
+  }else if(string == "EE"){
 
-  //ah:104
-  //eh:112
-  //ee:160
-  //oh:149
-  //oo:125
+    minion.y += minion.vy;
+  }else if(string == "OH"){
 
-  //AH
-  if (Math.round(pitch_range_hz) > 100 && Math.round(pitch_range_hz) <110){
+    minion.y -= minion.vy;
+  }else if(string == "OO"){
 
-  }
-  //EH
-  else if(Math.round(pitch_range_hz) > 110 && Math.round(pitch_range_hz) <115){
-
-  }
-  //EE
-  else if(Math.round(pitch_range_hz) > 135 && Math.round(pitch_range_hz) <145){
-
-  }
-  //OH
-  else if(Math.round(pitch_range_hz) > 250 && Math.round(pitch_range_hz) <355){
-
-  }
-  //
-  else if(Math.round(pitch_range_hz) > 115 && Math.round(pitch_range_hz) <120){
-
-  }
-  else{
-
+    minion.mouthradius += 1;
+    minion.x = minion.x;
+    minion.y = minion.y;
+    if (minion.mouthradius> 25){
+      minion.mouthradius = 5;
+    } 
   }
 
 
+  //over the canvas
+  if (minion.y + minion.vy > canvas.height) {
+    minion.y = 0;
+
+  } else if( minion.y + minion.vy < 0){
+    minion.y = canvas.height;
+  }
+  if (minion.x + minion.vx > canvas.width){
+      minion.x = 0;
+  }else if(minion.x + minion.vx < 0) {
+      minion.x = canvas.width;
+    }
  // if (Math.round(pitch_range_hz) > 0 && Math.round(pitch_range_hz) <400){
-  minion.x += minion.vx;
+  /*minion.x += minion.vx;
   minion.y += minion.vy;
     if (minion.y + minion.vy > canvas.height || minion.y + minion.vy < 0) {
     minion.vy = -minion.vy;
@@ -253,7 +263,7 @@ function animate(pitch_range_hz) {
      if (minion.x + minion.vx > canvas.width || minion.x + minion.vx < 0) {
       minion.vx = -minion.vx;
 
-    }
+    }*/
  // }
 
 /*  minion.x += minion.vx;
@@ -286,9 +296,14 @@ function animate(pitch_range_hz) {
   var analyser;
   
   var spec_view;
+  
+  var WIDTH = 1024;
+  var HEIGHT = 100;
+  
+  /*
   var WIDTH = 160;
   var HEIGHT = 80;
-  
+  */
   var PITCH_MIN = 36;
   var PITCH_MAX = 96;
   var PITCH_STEP = 0.25;
@@ -296,249 +311,30 @@ function animate(pitch_range_hz) {
   var pitch_range_hz = [];
   var NUM_HARMONICS = 15;
   
-  var AH = [ 0.0004038949846290052,
-             0.0004032215219922364,
-             0.00039257280877791345,
-             0.00038077752105891705,
-             0.00036930962232872844,
-             0.00035816390300169587,
-             0.0003481947642285377,
-             0.0003440162108745426,
-             0.0003420265857130289,
-             0.00034718052484095097,
-             0.00036445859586820006,
-             0.000388404238037765,
-             0.0004251462232787162,
-             0.00042554771061986685,
-             0.00044278253335505724,
-             0.00042494776425883174,
-             0.00042449860484339297,
-             0.000444582081399858,
-             0.0004495265893638134,
-             0.00040930017712526023,
-             0.0003674653416965157,
-             0.0003462308377493173,
-             0.0003604445664677769,
-             0.0003850113716907799,
-             0.0003962109622079879,
-             0.0004012303543277085,
-             0.00041789645911194384,
-             0.0004449079278856516,
-             0.00045991933438926935,
-             0.00045060698175802827,
-             0.0004380911123007536,
-             0.00046239199582487345,
-             0.0005431456957012415,
-             0.0006523314514197409,
-             0.0007318167481571436,
-             0.0007379663875326514,
-             0.0006732413894496858,
-             0.0005799718201160431,
-             0.0005059536779299378,
-             0.000473046995466575,
-             0.00047077820636332035,
-             0.0004743885947391391,
-             0.00046664278488606215,
-             0.00044735698611475527,
-             0.0004271316574886441,
-             0.00041440900531597435,
-             0.0004079124773852527,
-             0.00039894369547255337,
-             0.0003793675859924406,
-             0.000348905217833817,
-             0.00031792602385394275,
-             0.00029991279006935656,
-             0.0003039032453671098,
-             0.000329767499351874,
-             0.0003684826660901308,
-             0.0004067322879564017,
-             0.0004331139207351953,
-             0.00044306257041171193,
-             0.0004398644668981433,
-             0.0004320772422943264,
-             0.0004288249765522778,
-             0.00043525410001166165,
-             0.000450883962912485,
-             0.0004707004700321704,
-             0.0004877446044702083,
-             0.0004963002284057438,
-             0.0004936326295137405,
-             0.0004806595970876515,
-             0.00046134903095662594,
-             0.00044101671664975584,
-             0.0004244904557708651,
-             0.00041460723150521517,
-             0.00041157874511554837,
-             0.0004132141766604036,
-             0.00041594443609938025,
-             0.00041619627154432237,
-             0.00041139719542115927,
-             0.0004006538074463606,
-             0.00038478834903799,
-             0.0003661708324216306,
-             0.0003478631842881441,
-             0.0003328216844238341,
-             0.00032321186154149473,
-             0.0003202204534318298,
-             0.00032379041658714414,
-             0.000332891009747982,
-             0.00034528292599134147,
-             0.0003586617240216583,
-             0.0003710369346663356,
-             0.0003807457978837192,
-             0.0003867670602630824,
-             0.00038893570308573544,
-             0.0003881184384226799,
-             0.00038586772279813886,
-             0.0003841243451461196,
-             0.00038469245191663504,
-             0.00038780481554567814,
-             0.0003944157506339252,
-             0.000404894701205194,
-             0.00041835702722892165,
-             0.0004330560041125864,
-             0.00044733152026310563,
-             0.00045999561552889645,
-             0.0004700407152995467,
-             0.00047647941391915083,
-             0.0004784743650816381,
-             0.00047574611380696297,
-             0.0004687368345912546,
-             0.0004583375121001154,
-             0.0004456502210814506,
-             0.00043175890459679067,
-             0.00041779488674364984,
-             0.0004049759590998292,
-             0.0003944246855098754,
-             0.00038687518099322915,
-             0.000382546684704721,
-             0.000381205027224496,
-             0.0003823720326181501,
-             0.0003855016839224845,
-             0.0003899493021890521,
-             0.0003949159581679851,
-             0.0003994317085016519,
-             0.00040263650589622557,
-             0.0004038063052576035,
-             0.000401650439016521,
-             0.00039632324478589,
-             0.00038859379128552973,
-             0.0003785707231145352,
-             0.0003658300847746432,
-             0.0003505219065118581,
-             0.00033329500001855195,
-             0.0003154612786602229,
-             0.0002972599468193948,
-             0.00027909554773941636,
-             0.0002614793775137514,
-             0.0002452132757753134,
-             0.00023063058324623853,
-             0.0002189558290410787,
-             0.0002099535195156932,
-             0.00020198845595587045,
-             0.00019689861801452935,
-             0.00019244087161496282,
-             0.00019022173364646733,
-             0.00019179019727744162,
-             0.00019569748837966472,
-             0.00019953912124037743,
-             0.00020294811110943556,
-             0.00020724393834825605,
-             0.00021344936976674944,
-             0.0002204955235356465,
-             0.00022695331426803023,
-             0.00023222240270115435,
-             0.00023592486104462296,
-             0.00023946310102473944,
-             0.00024344258417841047,
-             0.0002472938213031739,
-             0.00025008004740811884,
-             0.0002514467923901975,
-             0.0002518303517717868,
-             0.00025174126494675875,
-             0.0002511235070414841,
-             0.00024968278012238443,
-             0.00024741768720559776,
-             0.0002448046870995313,
-             0.00024239777121692896,
-             0.00024034068337641656,
-             0.00023830242571420968,
-             0.00023582590802107006,
-             0.00023278206936083734,
-             0.0002295191225130111,
-             0.00022659075330011547,
-             0.00022442320187110454,
-             0.0002230658574262634,
-             0.0002221398171968758,
-             0.00022125463874544948,
-             0.00021999809541739523,
-             0.0002185667835874483,
-             0.000217130669625476,
-             0.00021577277220785618,
-             0.00021474662935361266,
-             0.00021434904192574322,
-             0.0002144850295735523,
-             0.00021474409732036293,
-             0.00021462725999299437,
-             0.00021390207984950393,
-             0.00021266003022901714,
-             0.00021114262926857919,
-             0.00020951662736479193,
-             0.00020788195251952857,
-             0.00020624263561330736,
-             0.00020453843171708286,
-             0.0002026485017267987,
-             0.00020039294031448662,
-             0.00019758772396016866,
-             0.00019415853603277355,
-             0.00019021138723473996,
-             0.00018602302588988096,
-             0.00018190962146036327,
-             0.00017803150694817305,
-             0.00017431624291930348,
-             0.0001705059694359079,
-             0.00016630854224786162,
-             0.00016154386685229838,
-             0.00015620655904058367,
-             0.0001504313258919865,
-             0.00014441290113609284,
-             0.0001383344060741365,
-             0.00013235036749392748,
-             0.0001265546161448583,
-             0.00012102820619475096,
-             0.00011580857972148806,
-             0.00011087678285548463,
-             0.00010615136852720752,
-             0.00010149912850465626,
-             0.00009677501657279208,
-             0.00009186860552290455,
-             0.00008674092532601207,
-             0.00008143804006977007,
-             0.00007607991574332118,
-             0.000070811620389577,
-             0.00006580285844393075,
-             0.00006117746670497581,
-             0.00005700657857232727,
-             0.000053291172662284225,
-             0.00004997480573365465,
-             0.000046967179514467716,
-             0.00004416446608956903,
-             0.00004147989602643065,
-             0.000038834688893985,
-             0.00003620444476837292,
-             0.00003359075708431192,
-             0.000031016170396469533,
-             0.00002850507735274732,
-             0.000026076577341882512,
-             0.000023740924007142894,
-             0.00002150307409465313,
-             0.000019364118998055346,
-             0.00001733879980747588,
-             0.00001545243321743328,
-             0.000013739273526880424,
-             0.000012234001587785315];
+/*
+var AH = [-31.33405303955078, -40.37859344482422, -41.577144622802734, -44.08484649658203, -54.59022903442383, -58.35899353027344];
+var EH = [-36.43718719482422, -46.92887878417969, -50.44660186767578, -55.026885986328125, -52.80834197998047, -60.98907470703125];
+var EE = [-46.75639724731445, -45.916194915771484, -59.29294204711914, -77.60706329345703, -78.74298858642578, -81.79804992675781];
+var OH = [-45.941993713378906, -44.103355407714844, -40.60642623901367, -41.8616828918457, -52.60694885253906, -49.02507400512695];
+var OO = [-26.98631477355957, -30.231548309326172, -33.391117095947266, -41.05668640136719, -57.538848876953125, -50.52845001220703];
+
+*/
+var AH =[-34.319969177246094, -44.88899230957031, -45.31900405883789, -47.67591094970703, -54.206520080566406, -49.52248001098633];
 
 
+//var EH =[-29.583967208862305, -45.52802276611328, -39.3639030456543, -43.07144546508789, -51.15338134765625, -69.62469482421875];
+var EH = [-32.26759338378906, -44.781185150146484, -38.87248229980469, -35.42667007446289, -45.306488037109375, -59.678993225097656];
+var EE =[-29.406415939331055, -36.0745735168457, -48.553955078125, -64.37005615234375, -61.57462692260742, -68.1220703125];
+var OH = [-32.406585693359375, -31.781143188476562, -32.751686096191406, -36.13419723510742, -38.151283264160156, -37.28185272216797];
+var OH =[-36.45124053955078, -38.05186462402344, -34.85139465332031, -47.72972106933594, -34.37431335449219, -55.60743713378906]
+var OO =[-35.57284927368164, -46.28710174560547, -42.112510681152344, -66.95425415039062, -61.87995147705078, -69.33203887939453]
+//var OO = [-40.14794158935547, -35.28848648071289, -40.46830749511719, -38.39738082885742, -49.84233474731445, -33.73945236206055];
+//var OO = [-51.05883026123047, -46.346946716308594, -37.273597717285156, -37.400089263916016, -41.76004409790039, -43.1248893737793];
+/*var AH =
+var EH =
+var EE =
+var OH =
+var OO =*/
   //
   window.onload=function(){   
     // canvas 
@@ -550,8 +346,8 @@ function animate(pitch_range_hz) {
     context = new AudioContext();
     
     // analyzer
-      analyser = context.createAnalyser();
-      analyser.fftSize = 2048;
+    analyser = context.createAnalyser();
+    analyser.fftSize = 2048;
     analyser.smoothingTimeConstant = 0;   
     
     // pitch range of interest
@@ -571,7 +367,7 @@ function animate(pitch_range_hz) {
     var drawContext = spec_view.getContext('2d');
     
     // fill rectangular
-    drawContext.fillStyle = 'rgb(200, 200, 200)';
+    drawContext.fillStyle = 'rgb(200, 100, 100)';
     drawContext.fillRect(0, 0, WIDTH, HEIGHT);
 
     // drawing line setting
@@ -583,19 +379,19 @@ function animate(pitch_range_hz) {
     var dataArray = new Float32Array(analyser.frequencyBinCount);
     analyser.getFloatFrequencyData(dataArray);
     
-    var freq_scale = 10;
+    var freq_scale =1;
     var sliceWidth = WIDTH * 1.0 / (dataArray.length/freq_scale);
     var x = 0;
-
+    var y = new Float32Array(analyser.frequencyBinCount);
     // display spectrum up to Nyquist_Frequency/10
     for (var i = 0; i < dataArray.length/freq_scale; i++) {
           var v = (dataArray[i] + 100)/50;
-          var y = HEIGHT - v * HEIGHT/2;
+          y[i] = HEIGHT - v * HEIGHT/2;
 
         if(i === 0) {
-            drawContext.moveTo(x, y);
+            drawContext.moveTo(x, y[i]);
           } else {
-            drawContext.lineTo(x, y);
+            drawContext.lineTo(x, y[i]);
           }
 
           x += sliceWidth;
@@ -610,21 +406,21 @@ function animate(pitch_range_hz) {
     //
     var pitch_likelihood = new Float32Array(pitch_range_hz.length);
     var power_likelihood = new Float32Array(pitch_range_hz.length);
-    
+    var power_amp = new  Float32Array(analyser.frequencyBinCount);
     var power = 0;
     
     for (var i = 0; i < dataArray.length; i++) {
-      var power_amp = Math.pow(10,dataArray[i]/10.0);
+      power_amp[i] = Math.pow(10,dataArray[i]/10.0);
       binfrqs = i/analyser.fftSize*context.sampleRate;
       
       for (var j = 0 ; j <  pitch_range_hz.length; j++) {
         if ( (binfrqs > pitch_range_hz[j]*0.5) & ( binfrqs <  NUM_HARMONICS* pitch_range_hz[j])) {
           pitch_weight = 0.5 * (1+ Math.cos(2*Math.PI*binfrqs/pitch_range_hz[j]));        
-          pitch_likelihood[j] = pitch_likelihood[j] + power_amp*pitch_weight;
-          power_likelihood[j] = power_likelihood[j]+ power_amp;
+          pitch_likelihood[j] = pitch_likelihood[j] + power_amp[i]*pitch_weight;
+          power_likelihood[j] = power_likelihood[j]+ power_amp[i];
         }
       }
-      power = power + power_amp;  
+      power = power + power_amp[i];  
     }
     
     // find max 
@@ -640,23 +436,122 @@ function animate(pitch_range_hz) {
     harmonicity = max_value/power_likelihood[max_index];
     
 
+   var hz_index = pitch_range_hz[max_index]/context.sampleRate*WIDTH*2*freq_scale;
+
+   f0 = Math.round(1*hz_index-1);
+   f1 = Math.round(2*hz_index-1);
+   f2 = Math.round(3*hz_index-1);
+   f3 = Math.round(4*hz_index-1);
+   f4 = Math.round(5*hz_index-1);
+   f5 = Math.round(6*hz_index-1);
+   //console.log(f0,f1,f2,f3,f4,f5);
+
+   var fund_freq_db = [dataArray[f0], dataArray[f1], dataArray[f2], dataArray[f3], dataArray[f4], dataArray[f5]];
+   console.log(fund_freq_db);
+   //ah
+   var norm_diff_AH  = 0;
+   for (var i = 0; i < fund_freq_db.length; i++){
+    var diff = AH[i] - fund_freq_db [i];
+    var sq_diff = Math.pow(diff , 2);
+    var norm_diff = Math.pow(sq_diff , 0.5);
+    norm_diff_AH += norm_diff;
+   }
+   //eh
+   var norm_diff_EH  = 0;
+   for (var i = 0; i < fund_freq_db.length; i++){
+    var diff = EH[i] - fund_freq_db [i];
+    var sq_diff = Math.pow(diff , 2);
+    var norm_diff = Math.pow(sq_diff , 0.5);
+    norm_diff_EH += norm_diff;
+   }   
+   //ee
+   var norm_diff_EE  = 0;
+   for (var i = 0; i < fund_freq_db.length; i++){
+    var diff = EE[i] - fund_freq_db [i];
+    var sq_diff = Math.pow(diff , 2);
+    var norm_diff = Math.pow(sq_diff , 0.5);
+    norm_diff_EE += norm_diff;
+   }   
+   //oh
+   var norm_diff_OH  = 0;
+   for (var i = 0; i < fund_freq_db.length; i++){
+    var diff = OH[i] - fund_freq_db [i];
+    var sq_diff = Math.pow(diff , 2);
+    var norm_diff = Math.pow(sq_diff , 0.5);
+    norm_diff_OH += norm_diff;
+   }   
+   //oo
+   var norm_diff_OO  = 0;
+   for (var i = 0; i < fund_freq_db.length; i++){
+    var diff = OO[i] - fund_freq_db [i];
+    var sq_diff = Math.pow(diff , 2);
+    var norm_diff = Math.pow(sq_diff , 0.5);
+    norm_diff_OO += norm_diff;
+   }
+   diff_vowel = [norm_diff_AH,norm_diff_EH,norm_diff_EE,norm_diff_OH,norm_diff_OO] 
+   
+   for (var i = 0 ; i < 5 ; i ++){
+    if (i == 0){
+      var best_match = 0;
+      var best_match_value = diff_vowel[0]
+    }
+    if ( best_match_value > diff_vowel[i]){
+      var best_match = i;
+      var best_match_value = diff_vowel[i]      
+    }
+   }
+   if(best_match == 0) {
+      string = "AH"
+   }else if(best_match == 1){
+      string = "EH"
+   }else if(best_match == 2 ){
+      string = "EE"
+   }else if(best_match == 3 ){
+      string = "OH"
+   }else if(best_match == 4 ){
+      string = "OO"
+   }
+   //console.log(string);
+
+
+
     drawContext.font = "5px Arial";
-    if (harmonicity)
-//      (harmonicity > 0.8) & (power > 0.00001) )
+    if ((harmonicity > 0.8) & (power > 0.00001) )
     {
+      console.log(string);
+
+      window.requestAnimationFrame(function(){
+        animate(string);
+      });
+
+
+
       drawContext.strokeText(Math.round(pitch_range_hz[max_index]) + " Hz",100,10);
-      drawContext.strokeText(pitch_range[max_index]+ " ST",100,20);
-      
+      //drawContext.strokeText(pitch_range[max_index]+ " ST",100,20);
+
+
+
       drawContext.fillStyle = 'rgb(100,0,0)';
-      drawContext.fillRect(pitch_range_hz[max_index]/context.sampleRate*WIDTH*2*freq_scale-1, 0, 2, HEIGHT);
-      drawContext.fillStyle = 'rgb(0,100,0)';
-      drawContext.fillRect(2*pitch_range_hz[max_index]/context.sampleRate*WIDTH*2*freq_scale-1, 0, 2, HEIGHT);
-           
+      drawContext.fillRect(1*hz_index-1, 0, 2, HEIGHT);
+      drawContext.fillStyle = 'rgb(100,0,0)';
+      drawContext.fillRect(2*hz_index-1, 0, 2, HEIGHT);
+      drawContext.fillStyle = 'rgb(100,0,0)';
+      drawContext.fillRect(3*hz_index-1, 0, 2, HEIGHT);
+      drawContext.fillStyle = 'rgb(100,0,0)';
+      drawContext.fillRect(4*hz_index-1, 0, 2, HEIGHT);
+      drawContext.fillStyle = 'rgb(100,0,0)';
+      drawContext.fillRect(5*hz_index-1, 0, 2, HEIGHT);
+      drawContext.fillStyle = 'rgb(100,0,0)';
+      drawContext.fillRect(6*hz_index-1, 0, 2, HEIGHT);
     }
 
     // queue for next callback
+
     window.requestAnimationFrame(draw_spec);
-  }
+
+
+ }
+
 
 
 
