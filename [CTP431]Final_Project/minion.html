@@ -25,7 +25,7 @@ from that data we can subtract from the mic input
     <meta http-equiv="X-UA-Compatible" content="IE=7" />
     <script type="text/javascript" src="./jsgl.min.js"></script>
 
-    <title>Li'l Me</title>
+    <title>Minion</title>
     
     
     <link rel="stylesheet" href="normalize.css">
@@ -121,6 +121,7 @@ var iris = canvas.getContext('2d');
 var goggle = canvas.getContext('2d');
 var pants = canvas.getContext('2d');
 var mouth = canvas.getContext('2d');
+var cloud = canvas.getContext('2d');
 
 var raf;
 var running = false;
@@ -131,19 +132,23 @@ var minion = {
   vx: 16,
   vy: 4,
 
-  radius: 100,
-  eyeradius: 15,
-  eyeballradius:32.5,
-  irisradius:10,
-  goggleradius:32.5,
-  mouthradius:10,
+  radius: 200,
+  eyeradius: 30,
+  eyeballradius:65,
+  irisradius:20,
+  goggleradius:65,
+  mouthheight:20,
+  mouthwidth:40,
+  mouthradius:20,
+  cloudradius: 200,
   colorbody: 'gold',
   coloreye:'brown',
   coloreyeball: 'white',
   coloriris: 'black',
   colorgoggle: 'grey',
   colorpants:'blue',
-  colormouth:'black',
+  colormouth:'red',
+  colorcloud:'white',
   draw: function() {
 
 // body part
@@ -156,34 +161,34 @@ var minion = {
 // pants
 
     pants.beginPath();
-    pants.rect(this.x- this.radius,this.y +this.radius/2+20, this.radius *2, this.radius);
+    pants.rect(this.x- this.radius,this.y +this.radius/2+this.irisradius, this.radius *2, this.radius);
     pants.closePath();
     pants.fillStyle = this.colorpants;
     pants.fill();  
 // eye balls  
     eyeball.beginPath();
-    eyeball.arc(this.x - this.radius/3, this.y-10, this.eyeballradius, 0, Math.PI*2, true);
-    eyeball.arc(this.x + this.radius/3, this.y-10, this.eyeballradius, 0, Math.PI*2, true);
+    eyeball.arc(this.x - this.radius/3, this.y-this.irisradius, this.eyeballradius, 0, Math.PI*2, true);
+    eyeball.arc(this.x + this.radius/3, this.y-this.irisradius, this.eyeballradius, 0, Math.PI*2, true);
     eyeball.closePath();
     eyeball.fillStyle = this.coloreyeball;
     eyeball.fill();
 // eye color
     eye.beginPath();
-    eye.arc(this.x - this.radius/3, this.y-10, this.eyeradius, 0, Math.PI*2, true);
-    eye.arc(this.x + this.radius/3, this.y-10, this.eyeradius, 0, Math.PI*2, true);
+    eye.arc(this.x - this.radius/3, this.y-this.irisradius, this.eyeradius, 0, Math.PI*2, true);
+    eye.arc(this.x + this.radius/3, this.y-this.irisradius, this.eyeradius, 0, Math.PI*2, true);
     eye.closePath();
     eye.fillStyle = this.coloreye;
     eye.fill();    
 // iris
     iris.beginPath();
-    iris.arc(this.x - this.radius/3, this.y-10, this.irisradius, 0, Math.PI*2, true);
-    iris.arc(this.x + this.radius/3, this.y-10, this.irisradius, 0, Math.PI*2, true);
+    iris.arc(this.x - this.radius/3, this.y-this.irisradius, this.irisradius, 0, Math.PI*2, true);
+    iris.arc(this.x + this.radius/3, this.y-this.irisradius, this.irisradius, 0, Math.PI*2, true);
     iris.closePath();
     iris.fillStyle = this.coloriris;
     iris.fill();
 // goggle
     goggle.beginPath();
-    goggle.arc(this.x - this.radius/3, this.y-10, this.goggleradius, 0, Math.PI*2, true);
+    goggle.arc(this.x - this.radius/3, this.y-this.irisradius, this.goggleradius, 0, Math.PI*2, true);
 
     goggle.closePath();
     goggle.lineWidth = 10;
@@ -191,23 +196,39 @@ var minion = {
     goggle.stroke();
     
     goggle.beginPath();
-    goggle.arc(this.x + this.radius/3, this.y-10, this.goggleradius, 0, Math.PI*2, true);
+    goggle.arc(this.x + this.radius/3, this.y-this.irisradius, this.goggleradius, 0, Math.PI*2, true);
     goggle.closePath();
     goggle.lineWidth = 10;
     goggle.strokeStyle = this.colorgoggle;
     goggle.stroke();   
 // mouth
-
     mouth.beginPath();
-    mouth.arc(this.x, this.y + this.radius/2, this.mouthradius, 0, Math.PI*2, true);
+    mouth.ellipse(this.x, this.y + this.radius/2, this.mouthwidth, this.mouthheight, Math.PI/180, 0, 2 * Math.PI);
+
+    //mouth.arc(this.x, this.y + this.radius/2, this.mouthradius, 0, Math.PI*2, true);
     mouth.closePath();
     mouth.fillStyle = this.colormouth;
     mouth.fill();
+          mouth.lineWidth = 5;
+      mouth.strokeStyle = 'black';
+      mouth.stroke();  
+
+// cloud
+
+/*
+    cloud.beginPath();
+    cloud.ellipse(this.x + this.radius , this.y - this.radius, this.cloudradius, 80, Math.PI/180, 0, 2 * Math.PI);
+
+    cloud.closePath();
+    cloud.fillStyle = this.colorcloud;
+    cloud.fill();
+          cloud.lineWidth = 5;
+      cloud.strokeStyle = 'black';
+      cloud.stroke();  */ 
   }
-    
+ 
 };
-var prev_string = "AH";
-var count = 0 ;
+
 function animate(string) {
   body.clearRect(0,0, canvas.width, canvas.height);
   pants.clearRect(0,0, canvas.width, canvas.height);
@@ -216,40 +237,89 @@ function animate(string) {
   iris.clearRect(0,0, canvas.width, canvas.height);
   goggle.clearRect(0,0, canvas.width, canvas.height);
   mouth.clearRect(0,0, canvas.width, canvas.height);
+  cloud.clearRect(0,0, canvas.width, canvas.height);
+
+ // minion.clearRect(0,0,canvas.width,canvas.height);
   minion.draw();
-  
-/*
-  if (prev_string == string ){
-    count += 1;
-  }else{
-    count = 0;
-  }
-  prev_string = string;
-*/
-  //if (count == 3){
-    if (string == "AH"){
-      minion.x += minion.vx;
-      
-    }else if(string == "EH"){
-      minion.x -= minion.vx;
-      
-    }else if(string == "EE"){
+  minion.font = "30px Arial";
+  //cloud.fillText(string ,minion.x + minion.radius , minion.y - minion.radius); 
 
-      minion.y += minion.vy;
-    }else if(string == "OH"){
-
-      minion.y -= minion.vy;
-    }else if(string == "OO"){
-
-      minion.mouthradius += 1;
-      minion.x = minion.x;
-      minion.y = minion.y;
-      if (minion.mouthradius> 25){
-        minion.mouthradius = 5;
-      } 
+  if (string == "AH"){
+    minion.x += minion.vx;
+    if (    minion.mouthwidth < 30){
+      minion.mouthwidth += 2;
+    }else if (minion.mouthwidth > 30){
+      minion.mouthwidth -= 4;
     }
-  //}
+    if( minion.mouthheight < 20) {
+      minion.mouthheight += 2;  
+    }else if (minion.mouthheight > 20){
+      minion.mouthheight -= 4 ;
+    }
+  }else if(string == "EH"){
+    minion.x -= minion.vx;
+    if (    minion.mouthwidth < 30){
+      minion.mouthwidth += 2;
+    }else if (minion.mouthwidth > 30){
+      minion.mouthwidth -= 4;
+    }
+    if( minion.mouthheight < 15) {
+      minion.mouthheight += 2;  
+    }else if (minion.mouthheight > 15){
+      minion.mouthheight -= 4 ;
+    }
 
+  }else if(string == "EE"){
+    minion.y += minion.vy;
+    if (    minion.mouthwidth < 40){
+      minion.mouthwidth += 2;
+    }else if (minion.mouthwidth > 40){
+      minion.mouthwidth -= 4;
+    }
+    if( minion.mouthheight < 10) {
+      minion.mouthheight += 2;  
+    }else if (minion.mouthheight > 10){
+      minion.mouthheight -= 4 ;
+    }
+
+
+
+  }else if(string == "OH"){
+
+    minion.y -= minion.vy;
+    if (    minion.mouthwidth < 30){
+      minion.mouthwidth += 2;
+    }else if (minion.mouthwidth > 30){
+      minion.mouthwidth -= 4;
+    }
+    if( minion.mouthheight < 30) {
+      minion.mouthheight += 2;  
+    }else if (minion.mouthheight > 30){
+      minion.mouthheight -= 4 ;
+    }
+
+
+
+  }else if(string == "OO"){
+
+   // minion.mouthradius += 1;
+    minion.x = minion.x;
+    minion.y = minion.y;
+   // if (minion.mouthradius> 25){
+     // minion.mouthradius = 5;
+   // }
+
+    if (    minion.mouthwidth < 15){
+      minion.mouthwidth += 2;
+    }else if (minion.mouthwidth > 15){
+      minion.mouthwidth -= 4;
+    }
+    if( minion.mouthheight < 15) {
+      minion.mouthheight += 2;  
+    }else if (minion.mouthheight > 15){
+      minion.mouthheight -= 4 ;
+    }
+  }
 
 
   //over the canvas
@@ -264,13 +334,14 @@ function animate(string) {
   }else if(minion.x + minion.vx < 0) {
       minion.x = canvas.width;
     }
+ 
 
 
 };
 
 
 
-//window.requestAnimationFrame(animate);
+
 
 
 
@@ -284,10 +355,7 @@ function animate(string) {
   var WIDTH = 1024;
   var HEIGHT = 100;
   
-  /*
-  var WIDTH = 160;
-  var HEIGHT = 80;
-  */
+
   var PITCH_MIN = 36;
   var PITCH_MAX = 96;
   var PITCH_STEP = 0.25;
@@ -296,22 +364,6 @@ function animate(string) {
   var NUM_HARMONICS = 15;
   
 
-var AH =[-34.319969177246094, -44.88899230957031, -45.31900405883789, -47.67591094970703, -54.206520080566406, -49.52248001098633];
-
-
-//var EH =[-29.583967208862305, -45.52802276611328, -39.3639030456543, -43.07144546508789, -51.15338134765625, -69.62469482421875];
-var EH = [-32.26759338378906, -44.781185150146484, -38.87248229980469, -35.42667007446289, -45.306488037109375, -59.678993225097656];
-var EE =[-29.406415939331055, -36.0745735168457, -48.553955078125, -64.37005615234375, -61.57462692260742, -68.1220703125];
-var OH = [-32.406585693359375, -31.781143188476562, -32.751686096191406, -36.13419723510742, -38.151283264160156, -37.28185272216797];
-var OH =[-36.45124053955078, -38.05186462402344, -34.85139465332031, -47.72972106933594, -34.37431335449219, -55.60743713378906]
-var OO =[-35.57284927368164, -46.28710174560547, -42.112510681152344, -66.95425415039062, -61.87995147705078, -69.33203887939453]
-//var OO = [-40.14794158935547, -35.28848648071289, -40.46830749511719, -38.39738082885742, -49.84233474731445, -33.73945236206055];
-//var OO = [-51.05883026123047, -46.346946716308594, -37.273597717285156, -37.400089263916016, -41.76004409790039, -43.1248893737793];
-/*var AH =
-var EH =
-var EE =
-var OH =
-var OO =*/
   //
   window.onload=function(){   
     // canvas 
@@ -411,72 +463,116 @@ var OO =*/
       }
     }
     harmonicity = max_value/power_likelihood[max_index];
-    
+
+
 
    var hz_index = pitch_range_hz[max_index]/context.sampleRate*WIDTH*2*freq_scale;
-
-   f0 = Math.round(1*hz_index-1);
-   f1 = Math.round(2*hz_index-1);
-   f2 = Math.round(3*hz_index-1);
-   f3 = Math.round(4*hz_index-1);
-   f4 = Math.round(5*hz_index-1);
-   f5 = Math.round(6*hz_index-1);
-   //console.log(f0,f1,f2,f3,f4,f5);
-
-   var fund_freq_db = [dataArray[f0], dataArray[f1], dataArray[f2], dataArray[f3], dataArray[f4], dataArray[f5]];
-   console.log(fund_freq_db);
-   //ah
-   var norm_diff_AH  = 0;
-   for (var i = 0; i < fund_freq_db.length; i++){
-    var diff = AH[i] - fund_freq_db [i];
-    var sq_diff = Math.pow(diff , 2);
-    var norm_diff = Math.pow(sq_diff , 0.5);
-    norm_diff_AH += norm_diff;
-   }
-   //eh
-   var norm_diff_EH  = 0;
-   for (var i = 0; i < fund_freq_db.length; i++){
-    var diff = EH[i] - fund_freq_db [i];
-    var sq_diff = Math.pow(diff , 2);
-    var norm_diff = Math.pow(sq_diff , 0.5);
-    norm_diff_EH += norm_diff;
-   }   
-   //ee
-   var norm_diff_EE  = 0;
-   for (var i = 0; i < fund_freq_db.length; i++){
-    var diff = EE[i] - fund_freq_db [i];
-    var sq_diff = Math.pow(diff , 2);
-    var norm_diff = Math.pow(sq_diff , 0.5);
-    norm_diff_EE += norm_diff;
-   }   
-   //oh
-   var norm_diff_OH  = 0;
-   for (var i = 0; i < fund_freq_db.length; i++){
-    var diff = OH[i] - fund_freq_db [i];
-    var sq_diff = Math.pow(diff , 2);
-    var norm_diff = Math.pow(sq_diff , 0.5);
-    norm_diff_OH += norm_diff;
-   }   
-   //oo
-   var norm_diff_OO  = 0;
-   for (var i = 0; i < fund_freq_db.length; i++){
-    var diff = OO[i] - fund_freq_db [i];
-    var sq_diff = Math.pow(diff , 2);
-    var norm_diff = Math.pow(sq_diff , 0.5);
-    norm_diff_OO += norm_diff;
-   }
-   diff_vowel = [norm_diff_AH,norm_diff_EH,norm_diff_EE,norm_diff_OH,norm_diff_OO] 
-   
-   for (var i = 0 ; i < 5 ; i ++){
-    if (i == 0){
-      var best_match = 0;
-      var best_match_value = diff_vowel[0]
-    }
-    if ( best_match_value > diff_vowel[i]){
-      var best_match = i;
-      var best_match_value = diff_vowel[i]      
+   var hz = pitch_range_hz[max_index];
+   var fund_freq_idx = new Float32Array(64);
+   var fund_freq = new Float32Array(64);
+   for (var i = 0 ; i < 64; i++){
+    fund_freq_idx[i] = Math.round(i*hz_index-1);
+    fund_freq[i] = i*hz;
+    if (fund_freq[i]>4000){
+      break;
     }
    }
+
+
+   var max_db_0 = -100;
+   var max_freq_0 = 0 ;
+   var max_db_1 = -100;
+   var max_freq_1 = 0 ;
+   var max_db_2 = -100;
+   var max_freq_2 = 0 ;
+   var max_db_3 = -100;
+   var max_freq_3 = 0 ;
+
+   var max_freq_idx_0 = 0;
+   var max_freq_idx_1 = 0;
+   var max_freq_idx_2 = 0;
+   var max_freq_idx_3 = 0;
+
+
+
+   for (var i = 0 ; i < 64; i++){
+   // 1000Hz below    
+    if (fund_freq[i]<1000){
+      if(max_db_0 < dataArray[fund_freq_idx[i]]){
+        max_db_0 = dataArray[fund_freq_idx[i]];
+        max_freq_0 = fund_freq[i];
+        max_freq_idx_0 = fund_freq_idx[i];
+      }
+    }
+    // 2000Hz ~ 4000Hz]
+    else if (fund_freq[i]>1000 && fund_freq[i]<2000){
+      if(max_db_1 < dataArray[fund_freq_idx[i]]){
+
+        max_db_1 = dataArray[fund_freq_idx[i]];
+        max_freq_1 = fund_freq[i];
+        max_freq_idx_1 = fund_freq_idx[i];
+      }
+    }
+
+    else if (fund_freq[i]>2000 && fund_freq[i]<3000){
+      if(max_db_2 < dataArray[fund_freq_idx[i]]){
+
+        max_db_2 = dataArray[fund_freq_idx[i]];
+        max_freq_2 = fund_freq[i];
+        max_freq_idx_2 = fund_freq_idx[i];
+      }
+    }
+    else if (fund_freq[i]>3000 && fund_freq[i]<4000){
+      if(max_db_3 < dataArray[fund_freq_idx[i]]){
+
+
+        max_db_3 = dataArray[fund_freq_idx[i]];
+        max_freq_3 = fund_freq[i];
+        max_freq_idx_3 = fund_freq_idx[i];
+      }
+
+    }
+
+
+
+  }
+  datafreq =[max_freq_0,max_freq_1,max_freq_2,max_freq_3];
+  console.log(datafreq);
+
+
+ AH = [190.4180450439453, 1047.2991943359375, 2665.8525390625, 3332.315673828125];
+ EH = [370.4124755859375, 1975.533203125, 2716.358154296875, 3457.18310546875];
+ EE = [277.1826171875, 1940.2784423828125, 2217.4609375, 3049.009033203125];
+ //EE = [269.2917785644531, 1481.104736328125, 2423.6259765625, 3231.50146484375];
+ OH = [359.8675537109375, 1199.5584716796875, 2519.07275390625, 3358.763916015625];
+ OO = [108.4229507446289, 1192.6524658203125, 2276.882080078125, 3252.6884765625];
+
+
+// calc guessing
+list = [AH, EH, EE, OH, OO ];
+/*var guess;
+var best_match;
+*/
+var guess;
+var best_match;
+for (var i = 0 ; i < 5; i++){
+  var guess = 0;
+  for (var j = 0; j<3 ;j++ ){
+    difference = list[i][j] - datafreq[j];
+    difference_norm = Math.pow(difference,2); 
+    guess += difference_norm;
+  }
+  if (i == 0){
+    prev_guess = guess;
+    best_match = i;
+  }
+  if (guess < prev_guess){
+    prev_guess = guess;
+    best_match = i;
+  }
+}
+
+
    if(best_match == 0) {
       string = "AH"
    }else if(best_match == 1){
@@ -488,53 +584,47 @@ var OO =*/
    }else if(best_match == 4 ){
       string = "OO"
    }
-   //console.log(string);
 
 
+//////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////
+
+
+    drawContext.fillStyle = 'rgb(100,100,100)';
+    drawContext.fillRect(1000/context.sampleRate*WIDTH*2*freq_scale, 0, 2, HEIGHT);
+    drawContext.fillStyle = 'rgb(100,100,100)';
+    drawContext.fillRect(2000/context.sampleRate*WIDTH*2*freq_scale, 0, 2, HEIGHT);
+    drawContext.fillStyle = 'rgb(100,100,100)';
+    drawContext.fillRect(3000/context.sampleRate*WIDTH*2*freq_scale, 0, 2, HEIGHT);
+    drawContext.fillStyle = 'rgb(100,100,100)';
+    drawContext.fillRect(4000/context.sampleRate*WIDTH*2*freq_scale, 0, 2, HEIGHT);
 
     drawContext.font = "5px Arial";
     if ((harmonicity > 0.8) & (power > 0.00001) )
     {
+//      console.log( diff_f0_f1  );
       console.log(string);
-
       window.requestAnimationFrame(function(){
-        animate(string);
+            animate(string);
       });
-
-
-
       drawContext.strokeText(Math.round(pitch_range_hz[max_index]) + " Hz",100,10);
-      drawContext.strokeText("'"+string + "'",100,20);
+      drawContext.strokeText(string ,100,20);     
+      drawContext.fillStyle = 'rgb(100,0,0)';
+      drawContext.fillRect(max_freq_idx_0 - 1, 0, 2, HEIGHT);
+      drawContext.fillStyle = 'rgb(100,0,0)';
+      drawContext.fillRect(max_freq_idx_1-1, 0, 2, HEIGHT);
+      drawContext.fillStyle = 'rgb(100,0,0)';
+      drawContext.fillRect(max_freq_idx_2-1, 0, 2, HEIGHT);
+      drawContext.fillStyle = 'rgb(100,0,0)';
+      drawContext.fillRect(max_freq_idx_3-1, 0, 2, HEIGHT);
 
-
-
-      drawContext.fillStyle = 'rgb(100,0,0)';
-      drawContext.fillRect(1*hz_index-1, 0, 2, HEIGHT);
-      drawContext.fillStyle = 'rgb(100,0,0)';
-      drawContext.fillRect(2*hz_index-1, 0, 2, HEIGHT);
-      drawContext.fillStyle = 'rgb(100,0,0)';
-      drawContext.fillRect(3*hz_index-1, 0, 2, HEIGHT);
-      drawContext.fillStyle = 'rgb(100,0,0)';
-      drawContext.fillRect(4*hz_index-1, 0, 2, HEIGHT);
-      drawContext.fillStyle = 'rgb(100,0,0)';
-      drawContext.fillRect(5*hz_index-1, 0, 2, HEIGHT);
-      drawContext.fillStyle = 'rgb(100,0,0)';
-      drawContext.fillRect(6*hz_index-1, 0, 2, HEIGHT);
     }
 
     // queue for next callback
-
     window.requestAnimationFrame(draw_spec);
 
 
  }
-
-
-
-
-
-
-
 
 
   </script>
@@ -543,37 +633,30 @@ var OO =*/
  <!-------------------------------------- AUDIO INPUT MIC -------------------------------------->
 
 <script>
-  var context = new AudioContext();
-  if (!navigator.getUserMedia)
-    navigator.getUserMedia = (navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia);
+      var context = new AudioContext();
+      if (!navigator.getUserMedia)
+        navigator.getUserMedia = (navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia);
+                    
+      if (!navigator.getUserMedia)
+        alert("Error: getUserMedia not supported!");
                 
-  if (!navigator.getUserMedia)
-    alert("Error: getUserMedia not supported!");
-            
-  // get audio input streaming         
-  navigator.getUserMedia({audio: true}, onStream, onStreamError)
+      // get audio input streaming         
+      navigator.getUserMedia({audio: true}, onStream, onStreamError)
 
-  // successCallback
-  function onStream(stream) {
-      var input = context.createMediaStreamSource(stream);
-    
-    // Connect graph
-    	input.connect(analyser);             
-    // visualize audio
-    draw_spec();  
-  }
-  
-  // errorCallback       
-  function onStreamError(error) {
-    console.error('Error getting microphone', error);
-  }
-
-</script>
-<!-------------<div class="canvas"><canvas id="canvas" style="border:1px solid #c3c3c3;" ></canvas></div>---------------------------------------------------------------------------------> 
-
-
-<script>
-
+      // successCallback
+      function onStream(stream) {
+          var input = context.createMediaStreamSource(stream);
+        
+        // Connect graph
+        	input.connect(analyser);             
+        // visualize audio
+        draw_spec();  
+      }
+      
+      // errorCallback       
+      function onStreamError(error) {
+        console.error('Error getting microphone', error);
+      }
 </script>
 
 
