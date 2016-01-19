@@ -1,84 +1,9 @@
 #include "main_init.h"
 
-
 int main(int argc, char** argv) {
 	int flag = 0;
-	KalmanFilter KF1(4, 2, 0);
-	Mat_<float> state(4, 1);
-	Mat_<float> processNoise(4, 1, CV_32F);
-	Mat_<float> measurement1(2, 1);
-	measurement1.setTo(Scalar(0));
-
-	KF1.statePre.at<float>(0) = 0;
-	KF1.statePre.at<float>(1) = 0;
-	KF1.statePre.at<float>(2) = 0;
-	KF1.statePre.at<float>(3) = 0;
-
-	KF1.transitionMatrix = (Mat_<float>(4, 4) << 1, 0, 1, 0, 0, 1, 0, 1, 0, 0, 1, 0, 0, 0, 0, 1); // Including velocity
-	KF1.processNoiseCov = (cv::Mat_<float>(4, 4) << 0.2, 0, 0.2, 0, 0, 0.2, 0, 0.2, 0, 0, 0.3, 0, 0, 0, 0, 0.3);
-
-	setIdentity(KF1.measurementMatrix);
-	setIdentity(KF1.processNoiseCov, Scalar::all(1e-4));
-	setIdentity(KF1.measurementNoiseCov, Scalar::all(1e-1));
-	setIdentity(KF1.errorCovPost, Scalar::all(.1));
-
-	KalmanFilter KF2(4, 2, 0);
-	//Mat_<float> state(4, 1);
-	//Mat_<float> processNoise(4, 1, CV_32F);
-	Mat_<float> measurement2(2, 1);
-	measurement2.setTo(Scalar(0));
-
-	KF2.statePre.at<float>(0) = 0;
-	KF2.statePre.at<float>(1) = 0;
-	KF2.statePre.at<float>(2) = 0;
-	KF2.statePre.at<float>(3) = 0;
-
-	KF2.transitionMatrix = (Mat_<float>(4, 4) << 1, 0, 1, 0, 0, 1, 0, 1, 0, 0, 1, 0, 0, 0, 0, 1); // Including velocity
-	KF2.processNoiseCov = (cv::Mat_<float>(4, 4) << 0.2, 0, 0.2, 0, 0, 0.2, 0, 0.2, 0, 0, 0.3, 0, 0, 0, 0, 0.3);
-
-	setIdentity(KF2.measurementMatrix);
-	setIdentity(KF2.processNoiseCov, Scalar::all(1e-4));
-	setIdentity(KF2.measurementNoiseCov, Scalar::all(1e-1));
-	setIdentity(KF2.errorCovPost, Scalar::all(.1));
-
-	KalmanFilter KF3(4, 2, 0);
-	//Mat_<float> state(4, 1);
-	//Mat_<float> processNoise(4, 1, CV_32F);
-	Mat_<float> measurement3(2, 1);
-	measurement3.setTo(Scalar(0));
-
-	KF3.statePre.at<float>(0) = 0;
-	KF3.statePre.at<float>(1) = 0;
-	KF3.statePre.at<float>(2) = 0;
-	KF3.statePre.at<float>(3) = 0;
-
-	KF3.transitionMatrix = (Mat_<float>(4, 4) << 1, 0, 1, 0, 0, 1, 0, 1, 0, 0, 1, 0, 0, 0, 0, 1); // Including velocity
-	KF3.processNoiseCov = (cv::Mat_<float>(4, 4) << 0.2, 0, 0.2, 0, 0, 0.2, 0, 0.2, 0, 0, 0.3, 0, 0, 0, 0, 0.3);
-
-	setIdentity(KF3.measurementMatrix);
-	setIdentity(KF3.processNoiseCov, Scalar::all(1e-4));
-	setIdentity(KF3.measurementNoiseCov, Scalar::all(1e-1));
-	setIdentity(KF3.errorCovPost, Scalar::all(.1));
-
-	KalmanFilter KF4(4, 2, 0);
-	//Mat_<float> state(4, 1);
-	//	Mat_<float> processNoise(4, 1, CV_32F);
-	Mat_<float> measurement4(2, 1);
-	measurement4.setTo(Scalar(0));
-
-	KF4.statePre.at<float>(0) = 0;
-	KF4.statePre.at<float>(1) = 0;
-	KF4.statePre.at<float>(2) = 0;
-	KF4.statePre.at<float>(3) = 0;
-
-	KF4.transitionMatrix = (Mat_<float>(4, 4) << 1, 0, 1, 0, 0, 1, 0, 1, 0, 0, 1, 0, 0, 0, 0, 1); // Including velocity
-	KF4.processNoiseCov = (cv::Mat_<float>(4, 4) << 0.2, 0, 0.2, 0, 0, 0.2, 0, 0.2, 0, 0, 0.3, 0, 0, 0, 0, 0.3);
-
-	setIdentity(KF4.measurementMatrix);
-	setIdentity(KF4.processNoiseCov, Scalar::all(1e-4));
-	setIdentity(KF4.measurementNoiseCov, Scalar::all(1e-1));
-	setIdentity(KF4.errorCovPost, Scalar::all(.1));
-
+	bool KF_flag = false;
+	int count = 0;
 	// *************************************************************** //
 	// Mono Calibration                                                //
 	// TODO                                                            //
@@ -94,10 +19,19 @@ int main(int argc, char** argv) {
 	cout << "camera matrix:" << cameraMatrix << endl;
 	cout << "distort coefficient:" << distCoeffs << endl;
 
+	// *************************************************************** //
+	// Kalman Filter                                                   //
+	// *************************************************************** //
+	KalmanFilter KF;         // instantiate Kalman Filter
+	int nStates = 18;            // the number of states
+	int nMeasurements = 6;       // the number of measured states
+	int nInputs = 0;             // the number of control actions
+	double dt = 0.125;           // time between measurements (1/FPS)
 
-	// *************************************************************** //
-	// Marker Detection                                                //
-	// *************************************************************** //
+	initKalmanFilter(KF, nStates, nMeasurements, nInputs, dt);    // init function
+	Mat measurements(nMeasurements, 1, CV_64F); measurements.setTo(Scalar(0));
+
+
 
 	VideoCapture cap(0); // open the default camera
 	if (!cap.isOpened()){  // check if we succeeded
@@ -111,6 +45,8 @@ int main(int argc, char** argv) {
 	vector<Point2f> marker_filter;
 	Mat prev_frame;
 	int first = 1;
+
+
 	while (true)
 	{
 		// retrieve the frame:
@@ -123,7 +59,9 @@ int main(int argc, char** argv) {
 		//imshow("LiveStream", frame);
 
 
-
+		// *************************************************************** //
+		// Marker Detection                                                //
+		// *************************************************************** //
 
 		// ************ //
 		// thresholding //
@@ -131,35 +69,29 @@ int main(int argc, char** argv) {
 		Mat gray_frame, threshframe;
 		cvtColor(frame, gray_frame, COLOR_BGR2GRAY);
 		Mat diff_frame;
-		threshold(gray_frame, threshframe, thresh, 255, THRESH_BINARY_INV);
+		threshold(gray_frame, threshframe,
+			thresh,
+			255, THRESH_BINARY_INV);
 		medianBlur(threshframe, threshframe, 5);
-		imshow("threshold", threshframe);
+
+		Mat threshframe_copy = threshframe;
+		//morphological opening (remove small objects from the foreground)
+		erode(threshframe_copy, threshframe_copy, getStructuringElement(MORPH_ELLIPSE, Size(5, 5)));
+		dilate(threshframe_copy, threshframe_copy, getStructuringElement(MORPH_ELLIPSE, Size(5, 5)));
+		//morphological closing (fill small holes in the foreground)
+		dilate(threshframe_copy, threshframe_copy, getStructuringElement(MORPH_ELLIPSE, Size(5, 5)));
+		erode(threshframe_copy, threshframe_copy, getStructuringElement(MORPH_ELLIPSE, Size(5, 5)));
+		imshow("threshold_copy", threshframe_copy);
+		//mshow("threshold", threshframe);
 
 
-		//if (first){
 
-		//	threshold(gray_frame, threshframe, thresh, 255, THRESH_BINARY_INV);
-		//	medianBlur(threshframe, threshframe, 5);
-		//	imshow("threshold", threshframe);
-		//	first = 0;
-		//	prev_frame = gray_frame;
-		//}
-		//else{
-
-		//	absdiff(gray_frame, prev_frame, diff_frame);
-		//	threshold(diff_frame, threshframe, thresh, 255, THRESH_BINARY_INV);
-		//	medianBlur(threshframe, threshframe, 5);
-		//	imshow("threshold", threshframe);
-
-		//}
-
-		
 		// *************************************************************** //
 		// Using Sqaure Detection                                          //
 		// *************************************************************** //
 		vector<vector<Point> > contours;
-		findContours(threshframe, contours, CV_RETR_LIST, CV_CHAIN_APPROX_SIMPLE);
-
+		//findContours(threshframe, contours, CV_RETR_LIST, CV_CHAIN_APPROX_SIMPLE);
+		findContours(threshframe_copy, contours, CV_RETR_LIST, CV_CHAIN_APPROX_SIMPLE);
 
 		vector<Point2f> approx_2f;
 		vector<Point> approx;
@@ -171,18 +103,14 @@ int main(int argc, char** argv) {
 		// test each contour
 		for (size_t i = 0; i < contours.size(); i++)
 		{
-
 			approxPolyDP(Mat(contours[i]), approx, arcLength(Mat(contours[i]), true)*0.02, true);
 			approxPolyDP(Mat(contours[i]), approx_2f, arcLength(Mat(contours[i]), true)*0.02, true);
-
-
 			if (approx.size() == 4 &&
-				fabs(contourArea(Mat(approx))) > 100 &&//1000 &&
+				fabs(contourArea(Mat(approx))) > 10 &&//1000 &&
 				isContourConvex(Mat(approx)))
 			{
 				squares.push_back(approx);
 				squares_2f.push_back(approx_2f);
-
 			}
 		}
 
@@ -259,6 +187,7 @@ int main(int argc, char** argv) {
 				bool eq = cv::countNonZero(diff) == 81;
 
 				if (eq){
+
 					marker.clear();
 					//cornerSubPix(threshframe, squares_2f[i], Size(11, 11), Size(-1, -1), TermCriteria(TermCriteria::EPS + TermCriteria::COUNT, 30, 0.1));
 					if (a == -1){
@@ -289,135 +218,96 @@ int main(int argc, char** argv) {
 						cout << "ERROR" << endl;
 					}
 					squareindex = i;
-					//drawMarker(frame, squares, squareindex);
-					//cout << "marker detected" << endl;
+					drawMarker(frame, squares, squareindex);
+					cout << "marker detected" << endl;
 					flag = 1;
+					KF_flag = true;
 					break;
 
+				}
+				else{
+					KF_flag = false;
 				}
 			}
 		}
 		//	drawSquares(frame, squares);
-
-
-		if (flag){
-			marker_filter.clear();
-
-			for (int c = 0; c < marker.size(); c++){
-
-				if (c == 0){
-					Mat prediction = KF1.predict();
-					Point predictPt(prediction.at<float>(0), prediction.at<float>(1));
-
-					drawCross(frame, marker[c], Scalar(255, 0, 0), 5);
-					measurement1(0) = marker[c].x;
-					measurement1(1) = marker[c].y;
-					Point measPt(measurement1(0), measurement1(1));
-
-					Mat estimated = KF1.correct(measurement1);
-					Point statePt(estimated.at<float>(0), estimated.at<float>(1));
-					marker_filter.push_back(statePt);
-
-					drawCross(frame, statePt, Scalar(255, 255, 255), 5);
-
-				}
-				else if (c == 1){
-
-					Mat prediction = KF2.predict();
-					Point predictPt(prediction.at<float>(0), prediction.at<float>(1));
-
-					drawCross(frame, marker[c], Scalar(255, 0, 0), 5);
-					measurement2(0) = marker[c].x;
-					measurement2(1) = marker[c].y;
-					Point measPt(measurement2(0), measurement2(1));
-
-					Mat estimated = KF2.correct(measurement2);
-					Point statePt(estimated.at<float>(0), estimated.at<float>(1));
-					marker_filter.push_back(statePt);
-
-					drawCross(frame, statePt, Scalar(255, 255, 255), 5);
-
-				}
-				else if (c == 2){
-
-					Mat prediction = KF3.predict();
-					Point predictPt(prediction.at<float>(0), prediction.at<float>(1));
-
-					drawCross(frame, marker[c], Scalar(255, 0, 0), 5);
-					measurement3(0) = marker[c].x;
-					measurement3(1) = marker[c].y;
-					Point measPt(measurement3(0), measurement3(1));
-
-					Mat estimated = KF3.correct(measurement3);
-					Point statePt(estimated.at<float>(0), estimated.at<float>(1));
-					marker_filter.push_back(statePt);
-
-					drawCross(frame, statePt, Scalar(255, 255, 255), 5);
-
-				}
-				else if (c == 3){
-
-					Mat prediction = KF4.predict();
-					Point predictPt(prediction.at<float>(0), prediction.at<float>(1));
-
-					drawCross(frame, marker[c], Scalar(255, 0, 0), 5);
-					measurement4(0) = marker[c].x;
-					measurement4(1) = marker[c].y;
-					Point measPt(measurement4(0), measurement4(1));
-
-					Mat estimated = KF4.correct(measurement4);
-					Point statePt(estimated.at<float>(0), estimated.at<float>(1));
-
-					drawCross(frame, statePt, Scalar(255, 255, 255), 5);
-					marker_filter.push_back(statePt);
-
-
-				}
-
-
-			}
-			imshow("trakcing", frame);
-			//cornerSubPix(threshframe, marker_filter, Size(5, 5), Size(-1, -1), TermCriteria(TermCriteria::EPS + TermCriteria::COUNT, 30, 0.1));
-
-		}
-
 
 		// *************************************************************** //
 		// Pose Estimation                                                 //
 		// *************************************************************** //
 		vector<Point3f> world_pt = marker_world_pt();	// 3d world coordinates
 		vector<Point3f> cube_pt = cube_3d();	//3d cub
+		vector<Point3f> axis = axis_3d();	//3d cub
 
 		Mat R_move, T_move;
+		vector<Point2f> cube_2d;
+		vector<Point2f> axis_2d;
+		vector<Point2f> marker_2d;
 
-
-		if (marker_filter.size() != 0){
-			vector<Point2f> cube_2d;
-			solvePnPRansac(world_pt, marker_filter, cameraMatrix, distCoeffs, R_move, T_move,false , 300, 0.01);
-			cout << "rotation matrix: " << R_move << endl;
-			cout << "translation matrix: " << T_move << endl;
-
-			projectPoints(cube_pt, R_move, T_move, cameraMatrix, distCoeffs, cube_2d);
-
-			//drawCorner(frame, marker_filter, radius);
-
-			drawCube(frame, cube_2d);
-		}
-
+		//Mat frame_2 = frame;
 
 		if (marker.size() != 0){
-			vector<Point2f> cube_2d;
-			solvePnPRansac(world_pt, marker, cameraMatrix, distCoeffs, R_move, T_move);
-			cout << "rotation matrix: " << R_move << endl;
-			cout << "translation matrix: " << T_move << endl;
+			//cout << marker << endl;
 
-			projectPoints(cube_pt, R_move, T_move, cameraMatrix, distCoeffs, cube_2d);
+			Mat inliers;
+			solvePnPRansac(world_pt, marker, cameraMatrix, distCoeffs, R_move, T_move, false, 500, 2.0, 0.99, inliers, SOLVEPNP_ITERATIVE);
+			//cout << "rotation matrix: " << R_move << endl;
+			//cout << "translation matrix: " << T_move << endl;
+			if (KF_flag){
+				Mat translation_measured(3, 1, CV_64F);
+				Mat rotation_measured(3, 3, CV_64F);
+				translation_measured = T_move;
+				Rodrigues(R_move, rotation_measured);
+				fillMeasurements(measurements, translation_measured, rotation_measured);
+			}
+			
 
-			drawCorner(frame, marker, radius);
+			Mat translation_estimated(3, 1, CV_64F);
+			Mat rotation_estimated(3, 3, CV_64F);
+			updateKalmanFilter(KF, measurements,translation_estimated, rotation_estimated);
 
-			drawCube(frame, cube_2d);
+
+			Mat est_R;
+			Mat est_T;
+			Mat error_T;
+			Rodrigues(rotation_estimated, est_R);
+			est_T = translation_estimated;
+			//cout << "est rotation matrix: " << est_R << endl;
+			//cout << "est translation matrix: " << est_T << endl;
+
+			double dist_t_error = norm(T_move, est_T);
+			double dist_r_error = norm(R_move, est_R);
+
+			cout << "difference between the two translation: " << dist_t_error << endl;
+			cout << "difference between the two rotation: " << dist_r_error << endl;
+
+
+
+
+			projectPoints(cube_pt, est_R, est_T, cameraMatrix, distCoeffs, cube_2d);
+			projectPoints(axis, est_R, est_T, cameraMatrix, distCoeffs, axis_2d);
+			projectPoints(world_pt, est_R, est_T, cameraMatrix, distCoeffs, marker_2d);
+
+
+			drawCubeBase(frame, marker_2d);
+			drawAxis(frame, axis_2d);
+			
+			//if (dist_t_error > 10 || dist_r_error > 10){
+			//	count++;
+			//}
+			//if (count > 10){
+			//	initKalmanFilter(KF, nStates, nMeasurements, nInputs, dt);    // init function
+			//	measurements.setTo(Scalar(0));
+			//	count = 0;
+
+			//}
+
+
+
+
+
 		}
-		
+
 		if (waitKey(30) == 27)
 			break;
 
@@ -429,6 +319,3 @@ int main(int argc, char** argv) {
 	cap.release();
 	return 0;
 }
-
-
-
