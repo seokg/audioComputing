@@ -15,9 +15,9 @@ void initKalmanFilter(KalmanFilter &KF, int nStates, int nMeasurements, int nInp
 
 	KF.init(nStates, nMeasurements, nInputs, CV_64F);                 // init Kalman Filter
 
-	setIdentity(KF.processNoiseCov, Scalar::all(1e-5));       // set process noise
-	setIdentity(KF.measurementNoiseCov, Scalar::all(1e-2));   // set measurement noise
-	setIdentity(KF.errorCovPost, Scalar::all(1));             // error covariance
+	setIdentity(KF.processNoiseCov, Scalar::all(1e-3));       // set process noise
+	setIdentity(KF.measurementNoiseCov, Scalar::all(1e-1));   // set measurement noise
+	setIdentity(KF.errorCovPost, Scalar::all(10));             // error covariance
 
 
 	/** DYNAMIC MODEL **/
@@ -52,13 +52,13 @@ void initKalmanFilter(KalmanFilter &KF, int nStates, int nMeasurements, int nInp
 	KF.transitionMatrix.at<double>(1, 7) = 0.5*pow(dt, 2);
 	KF.transitionMatrix.at<double>(2, 8) = 0.5*pow(dt, 2);
 
-	// orientation
-	KF.transitionMatrix.at<double>(9, 12) = dt;
-	KF.transitionMatrix.at<double>(10, 13) = dt;
-	KF.transitionMatrix.at<double>(11, 14) = dt;
-	KF.transitionMatrix.at<double>(12, 15) = dt;
-	KF.transitionMatrix.at<double>(13, 16) = dt;
-	KF.transitionMatrix.at<double>(14, 17) = dt;
+	//// orientation
+	//KF.transitionMatrix.at<double>(9, 12) = dt;
+	//KF.transitionMatrix.at<double>(10, 13) = dt;
+	//KF.transitionMatrix.at<double>(11, 14) = dt;
+	////KF.transitionMatrix.at<double>(12, 15) = dt;
+	//KF.transitionMatrix.at<double>(13, 16) = dt;
+	//KF.transitionMatrix.at<double>(14, 17) = dt;
 	KF.transitionMatrix.at<double>(9, 15) = 0.5*pow(dt, 2);
 	KF.transitionMatrix.at<double>(10, 16) = 0.5*pow(dt, 2);
 	KF.transitionMatrix.at<double>(11, 17) = 0.5*pow(dt, 2);
