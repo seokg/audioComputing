@@ -237,7 +237,7 @@ int main(int argc, char** argv) {
 		// *************************************************************** //
 		vector<Point3f> world_pt = marker_world_pt();	// 3d world coordinates
 		vector<Point3f> cube_pt = cube_3d();	//3d cub
-		vector<Point3f> axis = axis_3d();	//3d cub
+		//vector<Point3f> axis = axis_3d();	//3d cub
 
 		Mat R_move, T_move;
 		vector<Point2f> cube_2d;
@@ -260,11 +260,11 @@ int main(int argc, char** argv) {
 				Rodrigues(R_move, rotation_measured);
 				fillMeasurements(measurements, translation_measured, rotation_measured);
 			}
-			
+
 
 			Mat translation_estimated(3, 1, CV_64F);
 			Mat rotation_estimated(3, 3, CV_64F);
-			updateKalmanFilter(KF, measurements,translation_estimated, rotation_estimated);
+			updateKalmanFilter(KF, measurements, translation_estimated, rotation_estimated);
 
 
 			Mat est_R;
@@ -282,29 +282,18 @@ int main(int argc, char** argv) {
 			cout << "difference between the two rotation: " << dist_r_error << endl;
 
 
+			if (dist_t_error > 10 || dist_r_error > 10){
+				initKalmanFilter(KF, nStates, nMeasurements, nInputs, dt);    // init function
 
+				Mat measurements(nMeasurements, 1, CV_64F); measurements.setTo(Scalar(0));
+			}
+			//else {
 
-			projectPoints(cube_pt, est_R, est_T, cameraMatrix, distCoeffs, cube_2d);
-			projectPoints(axis, est_R, est_T, cameraMatrix, distCoeffs, axis_2d);
-			projectPoints(world_pt, est_R, est_T, cameraMatrix, distCoeffs, marker_2d);
-
-
-			drawCubeBase(frame, marker_2d);
-			drawAxis(frame, axis_2d);
-			
-			//if (dist_t_error > 10 || dist_r_error > 10){
-			//	count++;
-			//}
-			//if (count > 10){
-			//	initKalmanFilter(KF, nStates, nMeasurements, nInputs, dt);    // init function
-			//	measurements.setTo(Scalar(0));
-			//	count = 0;
+				projectPoints(cube_pt, est_R, est_T, cameraMatrix, distCoeffs, cube_2d);
+				projectPoints(world_pt, est_R, est_T, cameraMatrix, distCoeffs, marker_2d);
+				drawCube(frame, cube_2d);
 
 			//}
-
-
-
-
 
 		}
 
